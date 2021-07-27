@@ -1,0 +1,155 @@
+\documentclass[a4paper, 12pt]{extarticle}
+
+\usepackage{xecyr}
+\usepackage{color}
+\usepackage{float}
+\usepackage{fontenc}
+\usepackage{amsmath}
+\usepackage{xltxtra}
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{indentfirst}
+\usepackage[russian]{babel}
+
+\usepackage{amssymb}
+% \usepackage{cite}
+\usepackage{doi}
+\usepackage{subfig}
+\usepackage[labelfont=bf,labelsep=period]{caption}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\fontsize{14}{15}\bfseries}{\thesection.}{5pt}{}
+\titleformat{\subsection}
+  {\normalfont\fontsize{14}{15}\bfseries}{\thesubsection.}{5pt}{}
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{14}{15}\bfseries}{\thesubsubsection.}{5pt}{}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont[Ligatures=TeX]{Times New Roman}
+
+\usepackage[a4paper,margin=1in,heightrounded]{geometry}
+\geometry{left=1.5cm}
+\geometry{right=1.5cm}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+
+\usepackage{expl3}
+\ExplSyntaxOn
+\cs_new_eq:NN \Repeat \prg_replicate:nn
+\ExplSyntaxOff
+
+\usepackage[maxnames=5,
+        backend=biber,
+        style=gost-numeric,
+        sorting=none,
+        autolang=other]{biblatex}
+\addbibresource{bibliography.bib}
+
+% Sections style redefinition
+\renewcommand{\thesection}
+  {\thepart\arabic{section}}
+\renewcommand{\thesubsection}
+  {\thepart\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}
+  {\thepart\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+
+% Equations, fugures, tables numbering style redefinition
+\renewcommand{\theequation}
+  {\arabic{equation}}
+\renewcommand{\thefigure}
+  {\arabic{figure}}
+\renewcommand{\thetable}
+  {\arabic{table}}
+
+% Enum style redefinition
+\renewcommand{\labelenumii}
+  {\labelenumi\arabic{enumii}.}
+\renewcommand{\labelenumiii}
+  {\labelenumii\arabic{enumiii}.}
+
+% Enlarge table row height
+\renewcommand{\arraystretch}{1.2}
+
+% Font to inline code highlighting
+% Consolas must be installed!!!
+\newfontfamily{\codefont}[Scale=0.9]{Consolas}
+\newfontfamily{\listingsfont}[Scale=1.0]{Consolas}
+
+% Define default style for codelisitngs
+\definecolor{codegreen}{rgb}{0.00, 0.50, 0.00}
+\definecolor{codegray} {rgb}{0.50, 0.50, 0.50}
+\definecolor{codenumb} {rgb}{0.00, 0.00, 1.00}
+\definecolor{codeblue} {rgb}{0.00, 0.43, 0.13}
+\definecolor{codebrick}{rgb}{0.64, 0.08, 0.08}
+\lstset{
+  backgroundcolor=\color{white},
+  basicstyle=\fontsize{10}{12}\selectfont\listingsfont,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{codegreen},
+  frame=l,
+  keepspaces=true,
+  keywordstyle=\color{codeblue},
+  language=C++,
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{codegray},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=1,
+  stringstyle=\color{codebrick},
+  tabsize=2,
+  title=\lstname
+}
+
+% Listing numbering style redefinition
+\renewcommand{\lstlistingname}{Листинг}
+\AtBeginDocument{
+  \renewcommand{\thelstlisting}{\thesection\arabic{lstlisting}}
+}
+
+\newtheorem{hypothesis}{Гепотеза}
+\newtheorem{theorem}{Теорема}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\re}{\operatorname{Re}}
+
+\begin{document}
+
+\begingroup
+\fontsize{14pt}{17pt}\selectfont
+\input{mainpage} % Link to main page
+\endgroup
+
+\begingroup
+\fontsize{12pt}{20pt}\selectfont
+
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+
+\newpage
+\setcounter{page}{1}
+\input{text}
+
+%\newpage
+%\nocite{*}
+\addcontentsline{toc}{section}{Список литературы}
+\printbibliography
+
+Подпись аспиранта \Repeat{25}{\_}
+%\input{attachments}
+
+\endgroup
+
+\end{document}
