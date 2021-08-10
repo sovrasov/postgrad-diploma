@@ -1,5 +1,5 @@
-\section{Methods of Dimension Reduction}
-\subsection{Single Evolvent}
+\section{Методы редукции размерности}
+\subsection{Инъективная развёртка}
 
 Within the framework of the information-statistical global optimization theory,
 the Peano space-filling curves (or evolvents) \(y(x)\) mapping the interval \([0,1]\)
@@ -81,10 +81,10 @@ and the additional constraint with the left hand part from (\ref{6_g0})
 
 \begin{figure}[ht]
     \centering
-    \subfloat[Two shifted evolvents on the hypercubes $D_0$ and $D_1$]{{\includegraphics[width=.5\textwidth]{pictures/shifted.pdf}}\label{fig:shifted_ev}}
+    \subfloat[Two shifted evolvents on the hypercubes $D_0$ and $D_1$]{{\includegraphics[width=.5\textwidth]{evolvents/shifted.pdf}}\label{fig:shifted_ev}}
     %\subfloat[Hypercubes $D_l$]{{\includegraphics[width=.4\textwidth]{pictures/shifted_cube.png}}\label{fig:shifted_cube}}
-    \subfloat[Two rotated evolvents on the same plane]{{\includegraphics[width=.5\textwidth]{pictures/rotated.pdf}}\label{6_fig_9}}
-    \caption{Multiple evolvents built with low density }
+    \subfloat[Two rotated evolvents on the same plane]{{\includegraphics[width=.5\textwidth]{evolvents/rotated.pdf}}\label{6_fig_9}}
+    \caption{Различные развёртки, построенные с низкой плотностью}
 \end{figure}
 
 %------------------------------------------------------------------------------
@@ -111,126 +111,93 @@ onto the corresponding one-dimensional intervals. Moreover, the additional const
 method for building a set of mappings can be ``scaled'' easily to obtain more evolvents (up to
 $2^N$) if necessary.
 
-%\begin{figure}[t]
-%  \centering
-%  \includegraphics[width=0.6\linewidth]{pictures/rotated.pdf}
-%  \caption{Two rotated evolvents on the same plane}
-%  \label{6_fig_9}
-%\end{figure}
-
 %------------------------------------------------------------------------------
-\subsection{Non-Univalent Evolvent}
+\subsection{Неинъективная развёртка}
 %\begin{Russian}
 
-As it has been already mentioned above (Sec.~\ref{sec:shifted}), the loss of information on the
-proximity of the points in the multidimensional space could be compensated in part by the use
-of multiple mappings $Y_L(x)=\{y^1(x),...,y^L(x)\}$. However, the Peano-type curve preserves
-a part of this information itself: it is not an injective mapping. Therefore, if a single image
-$y(x)\in \mathbb{R}^N$ is available, one can obtain several different preimages
-$t_j\in[0,1], t_j \not = x$, which could be added into the search information of the method later.
+Как уже было сказано в секции \ref{sec:shifted}, потеря информации о близости точек в многомерном
+пространстве может быть частично скомпенсирована использованием множественных отображений $Y_L(x)=\{y^1(x),...,y^L(x)\}$.
+Однако, сама по себе кривая типа Пеано сохраняет в себе часть этой информации: она не является инъективым отображением,
+поэтому имея один образ $y(x)\in \mathbb{R}^N$, можно получить несколько несколько отличных $x$ прообразов $t_j\in[0,1], t_j \not = x$,
+которые затем могут быть добавлены в поисковую информацию индексного метода.
 
-The Peano-type curve used in (\ref{eq:oneDimTask}) for the dimensionality reduction is
-defined via the transition to the limit. Therefore, it cannot be computed directly. In the
-numerical optimization, some approximation of this curve is used, and it is an injective piecewise-linear curve. In \cite{strongin1978} a non-univalent mapping of a uniform grid in the
-interval $[0,1]$ onto a uniform grid in a hypercube $D$ has been proposed. Each
-multidimensional node can have up to $2^N$ one-dimensional preimages. In
-Fig.~\ref{fig:noninjective}, the grid in the $\mathbb{R}^2$ space is marked by the crosses, for
-two nodes of which the corresponding one-dimensional preimages from $[0,1]$ are pointed
-(marked by the squares and circles). Each node mentioned above has 3 preimages.
+Кривая типа Пеано, используемая в (\ref{eq:oneDimTask}) для редукции размерности, определяется через предельный переход,
+поэтому не может быть вычислена непосредтвенно. При численной оптимизации используется некоторое её приближение, являющееся
+инъективной кусочно-линейной кривой. В \cite{strongin1978} было предложено неинъективное отображение равномерной сетки на
+отрезка $[0,1]$ на равномерную сетку в гиперкубе $D$. Каждый многомерный узел может иметь до $2^N$ одномерных прообразов.
+На рис. \ref{fig:noninjective} крестиками обозначена сетка в пространесве $\mathbb{R}^2$, для двух узлов которой
+указаны соответствующие им одномерное прообразы из $[0,1]$ (отмечены квадратами и кругами). Каждый указанный узел имеет по 3 прообраза.
 
-A potentially large number of preimages (up to $2^N$) and the inability to use the parallel
-scheme for the multiple mappings form Sec.~\ref{sec:parallel_evolvents} are the disadvantages
-of the non-univalent evolvent.
+Недостатком неинъективной развёртки является потенциально большое количетво прообразов (до $2^N$).
+% и невозможность использования параллельной схемы для множественных отображений из секции \ref{sec:parallel_evolvents}.
 
 
 %------------------------------------------------------------------------------
-\subsection{Smooth Evolvent}
+\subsection{Гладкая развёртка}
 
-The methods of constructing the evolvents considered in the previous paragraphs produce the
-curve $y(x)$, which in not a smooth one (see Fig.~\ref{fig:shifted_ev}). The absence of
-smoothness may affect the properties of the reduced one-dimensional function $\varphi(y(x))$
-adversely since a smooth curve reflect the information on the growth/decay of the initial
-function better. On the basis of initial algorithm of constructing the non-smooth evolvent, a
-generalized algorithm allowing constructing a smooth space-filling curve has been
-proposed~\cite{Goryachih2017}. As an illustration, a smooth evolvent for the two-dimensional
-case is presented in Fig.~\ref{fig:smooth}.
-An increased computational complexity (several times as compared to the piecewise-linear
-curves) is a disadvantage of the smooth evolvent. This caused by computing of the nonlinear smooth
-functions.
-%At that, the number of smooth intervals and the difficulty of the
-%computations of the curve increases with increasing accuracy of approximation and
-%space dimension.
-
-%\end{Russian}
+Рассмотренные в предыдущих пунктах способы построения развертки строят кривую $y(x)$, которая не является
+гладкой (см. рис. \ref{fig:shifted_ev}). Отсутствие гладкости может негативно сказаться на свойствах редуцированной
+одномерной функции $\varphi(y(x))$, т.к. гладкая кривая более качественно передает информации о возрастании/убывании
+исходной функции. На основе исходного алгоритма построения негладкой развертки было предложен обобщенный алгоритм
+\cite{Goryachih2017}, позволяющий строить гладкую развёртку. Для иллюстрации на рис. \ref{fig:smooth} изображена гладкая
+развертка в двумерном случае. Недостатком гладкой развёртки является в несколько раз большая сложность вычисления по
+сравнению с кусочно-линейными кривыми (требуется вычислять нелинейные гладкие функции). Причём с ростом точности аппроксимации и
+размерности количество интервалов гладкости увеличивается и сложн ость вычисления кривой нарастает.
 
 \begin{figure}[ht]
     \centering
-    \subfloat[Smooth evolvent]{{\includegraphics[width=.6\textwidth]{pictures/smooth.pdf}}\label{fig:smooth}}
-    \subfloat[Non-univalent
-evolvent]{{\includegraphics[width=.4\textwidth]{pictures/noninjective.pdf}}\label{fig:noninjective}}
-    \caption{Different evolvents built with low density}
+    \subfloat[Гладкая развёртка]{{\includegraphics[width=.6\textwidth]{evolvents/smooth.pdf}}\label{fig:smooth}}
+    \subfloat[Неинъективная развёртка]{{\includegraphics[width=.4\textwidth]{evolvents/noninjective.pdf}}\label{fig:noninjective}}
+    \caption{Различные развёртки, построенные с низкой плотностью}
 \end{figure}
 
-\subsection{Comparison of the Sequential Evolvents}
+\subsection{Сравнение развёрток}
 \label{sec:seq_comp}
-%\begin{Russian}
-In order to understand whether any type of evolvents listed above has an essential advantage as
-compared to other ones, the operating characteristics of the index method with different types
-of evolvents have been obtained for the classes GKLS 2d Simple and GKLS 3d Simple. The
-global minimum was considered to be found if the algorithm generates a trial point $y^k$ in the
-$\delta$-vicinity of the global minimizer, i.e. $\left\|y^k-y^\ast\right\|_\infty\leq\delta$. The size
-of the vicinity was selected as $\delta = 0.01\left\|b-a\right\|_\infty$. In case of GKLS
-$\delta=0.01$.
+\begin{Russian}
+С целью понять, обладает ли какой-либо из перечисленных ранее типов развёрток существенным преимуществом над другими,
+были построены операционные характеристики индексного метода с различными типами развёрток на классах
+GKLS 2d Simple и GKLS 3d Simple. The global minimum was considered to be found if the algorithm generates a
+trial point $y^k$ in the $\delta$-vicinity of the global minimizer, i.e. $\left\|y^k-y^\ast\right\|_\infty\leq\delta$.
+The size of the vicinity was selected as $\delta = 0.01\left\|b-a\right\|_\infty$. In case of GKLS $\delta=0.01$.
 
-In all experiments, the evolvent construction density parameter $m=12$. The minimum value of
-the reliability parameter \(r\) was found for each type of evolvents by scanning over a uniform grid
-with the step \(0.1\).
+Во всех экспериментах параметр плотности построения развёрток $m=12$. Минимальное значение пераметра надёжности \(r\) было найдено
+для каждого типа развёртки перебором по равномерной сетке с шагом \(0.1\).
 
-On the GKLS 2d Simple class at the minimum \(r\), the non-univalent evolvent and the smooth
-one provide a faster convergence (Fig.~\ref{fig:gkls2d_opt}). The same was observed at
-\(r=5.0\) as well (Fig.~\ref{fig:gkls2d_acc}). In the latter case, the shifted evolvent and the
-rotating one begin to lag behind the rest since the value \(r=5.0\) is too big for them.
+На классе GKLS 2d Simple при минимальном \(r\) неинъективная и гладкая развёртка обеспечивают более быструю сходимость
+(рис. \ref{fig:gkls2d_opt}). То же самое, наблюдается и при \(r=5.0\) (рис. \ref{fig:gkls2d_acc}). В последнем случае сдвиговая и
+вращаемая развёртки начинают отставать от остальных, т.к. значение \(r=5.0\) является завышенным для них.
 \begin{figure}[ht]
     \centering
-
-\subfloat[$r=5.0$]{{\includegraphics[width=.5\textwidth]{pictures/gklsS2d_same_r_opt_pt_op.pdf}}\label{fig:gkls2d_acc}}
-    \subfloat[Minimal
-$r$]{{\includegraphics[width=.5\textwidth]{pictures/gklsS2d_opt_pt_op.pdf}}\label{fig:gkls2d_opt}}
-    \caption{Operating characteristics on GKLS 2d Simple class}
+    \subfloat[$r=5.0$]{{\includegraphics[width=.5\textwidth]{evolvents/gklsS2d_same_r_opt_pt_op.pdf}}\label{fig:gkls2d_acc}}
+    \subfloat[Minimal $r$]{{\includegraphics[width=.5\textwidth]{evolvents/gklsS2d_opt_pt_op.pdf}}\label{fig:gkls2d_opt}}
+    \caption{Операционные характеристики на классе GKLS 2d Simple}
 \end{figure}
 
-On the GKLS 2d Simple class at the minimum \(r\), the non-univalent evolvents and multiple
-ones have a considerable advantage over the single evolvent (Fig.~\ref{fig:gkls3d_opt}).
-The value \(r=4.5\) is too big for the rotated evolvents and for the shifted one
-(Fig.~\ref{fig:gkls3d_acc}).
+На классе GKLS 2d Simple при минимальном \(r\) неинъективная и множественные развёртки имеют значительное
+преимущество над единственной развёрткой (рис. \ref{fig:gkls3d_opt}). Значение \(r=4.5\) является завышенным для
+вращаемой и сдвиговой развёрток (рис. \ref{fig:gkls3d_acc}).
 
 \begin{figure}[ht]
     \centering
-
-\subfloat[$r=4.5$]{{\includegraphics[width=.5\textwidth]{pictures/gklsS3d_same_r_opt_pt_op.pdf}}\label{fig:gkls3d_acc}}
-    \subfloat[Minimal
-$r$]{{\includegraphics[width=.5\textwidth]{pictures/gklsS3d_opt_pt_op.pdf}}\label{fig:gkls3d_opt}}
-    \caption{Operating characteristics on GKLS 3d Simple class}
+    \subfloat[$r=4.5$]{{\includegraphics[width=.5\textwidth]{evolvents/gklsS3d_same_r_opt_pt_op.pdf}}\label{fig:gkls3d_acc}}
+    \subfloat[Minimal $r$]{{\includegraphics[width=.5\textwidth]{evolvents/gklsS3d_opt_pt_op.pdf}}\label{fig:gkls3d_opt}}
+    \caption{Операционные характеристики на классе GKLS 3d Simple class}
 \end{figure}
 
-\paragraph{Overhead costs when using the shifted evolvents.}
-In all experiments presented above, the number of computations of the objective function from
-the GKLS class was taken into account when plotting the operating characteristics. However, in
-the case of the shifted evolvent, the index method solves the problem with the constraint \(g_0\)
-from (\ref{6_g0}). At the points where \(g_0\) is violated, the value of the objective function is
-not computed. Nevertheless, these points are stored in the search information producing the
-additional computational costs. In Table~\ref{tab:shifted_g0}, the averaged numbers of calls to
-\(g_0\) and to the objective function are presented. At \(L=3\), the constraint \(g_0\) was
-computed almost 20 times more than the objective function \(\varphi\) i. e. \(95\%\) of the whole
-search information account for the auxiliary points. Such overhead costs are acceptable when
-solving the problems of small dimension with the computation costly objective functions.
-However, when increasing dimensionality and total number of trials other types of evolvents are
-preferred.
+\paragraph{Накладные расходы при использовании сдвиговой развёртки.}
+Во всех представленных выше экспериментах при построении операционной характеристики учитывалось количество
+вычислений целевой функции из класса GKLS, однако в случае сдвиговой развёртки индексный метод решает задачу
+с ограничением \(g_0\) из (\ref{6_g0}). В точках, где \(g_0\) нарушено, значение целевой функции не вычисляется.
+Эти точки, тем не менее, хранятся в поисковой информации, создавая дополнительные расходы вычислительных ресурсов.
+В таблице \ref{tab:shifted_g0} приведено среднее количество обращение к \(g_0\) и целевой функции. При \(L=3\)
+ограниение \(g_0\) вычисляется почти в 20 раз чаще, чем целевая функция \(\varphi\), т. е. \(95\%\)
+всей поисковой информации приходится на вспомогательные точки. Такие накладные расходы приемлемы при решении
+задач малой размерности с трудоёмкими целевыми функциями, но при росте размерности и общего количества испытаний выгоднее
+использовать другие типы развёрток.
 
 \begin{table}
 \begin{center}
-\caption{Averaged number of computations of \(g_0\) and of \(\varphi\) when solving the
-problems from GKLS 3d Simple class using the shifted evolvent}
+\caption{Среднее количество вычислений \(g_0\) и \(\varphi\) при решении задач класса GKLS 3d Simple с помощью сдвиговой развёртки}
   \begin{tabular}{|l|{c}|{c}|{c}|}
     \hline
   $L$ & $calc(g_0)$ & $calc(\varphi)$ & $\frac{calc(g_0)}{calc(\varphi)}$ ratio \\
