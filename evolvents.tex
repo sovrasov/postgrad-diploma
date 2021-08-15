@@ -1,119 +1,111 @@
 \section{Методы редукции размерности}
 \subsection{Инъективная развёртка}
 
-Within the framework of the information-statistical global optimization theory,
-the Peano space-filling curves (or evolvents) \(y(x)\) mapping the interval \([0,1]\)
-onto an \(N\)-dimensional hypercube \(D\) unambiguously are used for the dimensionality
-reduction \cite{sergeyevStronginLera2013}, \cite{strongin1978},
-\cite{stronginGergelBarkalovParGO}, \cite{strSergGO}.
+Для редукции размерности задач оптимизации в рамках информационно-статистического подхода
+применяются кривые типа Пеано, заполняющие пространство (развёртки) \cite{sergeyevStronginLera2013}, \cite{strongin1978},
+\cite{stronginGergelBarkalovParGO}, \cite{strSergGO}. Такие кривые отображают
+отрезок \([0,1]\) на \(N\)-мерный гиперкуб \(D\).
+
 \par
-As a result of the reduction, the initial multidimensional global optimization
-problem (\ref{eq:task}) is reduced to the following one-dimensional problem:
+После редукции размерности исходная многомерная задача (\ref{eq:task}) преобразуется в одномерную задачу
+следующего вида:
 \begin{equation}
 \label{eq:oneDimTask}
 \varphi(y(x^*))=\min\{\varphi(y(x)):x\in [0,1]\}.
 \end{equation}
 \par
-It is important to note that this dimensionality reduction scheme transforms the % minimized
-Lipschitzian function from (\ref{eq:task}) to the corresponding one-dimensional
-function \(\varphi(y(x))\), which satisfies the uniform H{\"o}lder condition, i. e.
+Стоит отметить, что подстановка развёртки в Липшицеву функцию  % minimized
+из (\ref{eq:task}) порождает одномерную функцию \(\varphi(y(x))\), которая удовлетворяет условию Гёльдера:
 \begin{equation}
 \label{eq:holder}
 |\varphi(y(x_1))-\varphi(y(x_2))|\leq H{|x_1-x_2|}^{\frac{1}{N}}, x_1,x_2\in[0,1],
 \end{equation}
-where the constant $H$ is defined by the relation \(H=2L\sqrt{N+3}\), \(L\) is the Lipschitz
-constant from (\ref{eq:lip}), and \(N\) is the dimensionality of the optimization problem
-(\ref{eq:task}).
+где константа $H$ удовлетворяет неравенству \(H=2L\sqrt{N+3}\), \(L\) -- константа Липшица из (\ref{eq:lip}),
+и \(N\) -- размерность задачи (\ref{eq:task}).
 \par
-The algorithms for the numerical construction of the Peano curve approximations are
-given in \cite{strSergGO}.
+Алгоритмы численного построения аппроксимаций кривой Пеано приведены в \cite{strSergGO}.
 
 \par
-The computational scheme obtained as a result of the dimensionality reduction consists of the
-following:
+Вычислительная схема алгоритма, применяющего кривые Пеано для редукции размерности, выглядит следующим образом:
 \begin{itemize}
-  \item The optimization algorithm performs the minimization of the reduced one-dimensional
-  function \(\varphi(y(x))\) from (\ref{eq:oneDimTask}),
-  \item After determining the next trial point \(x\), a multidimensional image \(y\) is calculated by
-using the mapping \(y(x)\),
-  \item The value of the initial multidimensional function \(\varphi(y)\) is calculated at the point
-\(y\in D\),
-  \item The calculated value \(z=\varphi(y)\) is used further as the value of the reduced one-dimensional function \(\varphi(y(x))\) at the point \(x\).
+  \item Алгоритм оптимизации выполняет минимизацию редуцированной одномерной функции
+  \(\varphi(y(x))\) из (\ref{eq:oneDimTask}),
+  \item После нахождения точки следующего испытания \(x\), её многомерный образ \(y\)
+  вычисляется с использованием развёртки \(y(x)\),
+  \item Значение исходной многомерной функции \(\varphi(y)\) вычисляется в точке \(y\in D\),
+  \item Вычисленное значение \(z=\varphi(y)\) используется как значение одномерной редуцированной функции \(\varphi(y(x))\) в точке \(x\).
 \end{itemize}
 
 %------------------------------------------------------------------------------
-\subsection{Shifted Evolvents}
+\subsection{Сдвиговые развёртки}
 \label{sec:shifted}
 
-One of the possible ways to overcome the negative effects of using a numerical
-approximation of evolvent (it destroys the information about the neighbor points in $\mathbb{R}^N$ space,
-see \cite{Strongin1992}) consists in using the multiple mappings
+Применение кривой типа Пеано для редукции размерности приводит к потере локальной информации об окрестности многомерных точек
+в пространстве $\mathbb{R}^N$ (см. \cite{Strongin1992}).
+Одним из способов частично решить эту проблему является использование множества развёрток \cite{Strongin1992}:
 \begin{equation}%\label{eq:142}
 Y_L(x)=\left\{y^0(x),\ y^1(x),...,\ y^L(x)\right\}
 \end{equation}
-instead of single Peano curve $y(x)$ (see \cite{Strongin1992,strSergGO,Strongin1991}).
+вместо одной кривой Пеано $y(x)$ (см. \cite{Strongin1992,strSergGO,Strongin1991}).
 
-Such set of evolvents can be produced by shifting the source evolvent $y^0(x)$ by $2^{-l},0
-\leq l \leq L$ on each coordinate. Each evolvent has it's own corresponding hypercube $D_l=
+Такой набор отображений может быть получен путём сдвига исходной развёртки $y^0(x)$ на $2^{-l},0
+\leq l \leq L$ по каждой из координат. Каждая из развёрток определена на своём гиперкубе $D_l=
 \left\{y \in R^N: -2^{-1} \leq y_i+2^{-l} \leq 3 \cdot 2^{-1},\ 1\leq i\leq N\right\},\ 0 \leq l \leq
 L$.
 
-In Fig.~\ref{fig:shifted_ev} the image of the interval $[0,1]$ obtained by the curve $y^0(x),\
-x\in [0,1],$ is shown as the dashed line. Since the hypercube $D$ from (\ref{eq:task}) is
-included in the common part of the family of hypercubes $D_l$, having introduced an additional constraint
-function
+На Рис.~\ref{fig:shifted_ev} пунктирной линией обозначен образ интервала $[0,1]$, полученный с помощью $y^0(x),\
+x\in [0,1],$. Поскольку гиперкуб $D$ из (\ref{eq:task}) принадлежит пересечению
+семейства гиперкубов $D_l$, необходимо ввести дополнительное ограничение:
 \begin{equation}\label{6_g0}
 g_0(y)=\max\left\{\left|y_i\right| - 2^{-1}:\ 1\leq i\leq N\right\},
 \end{equation}
-one can present the initial hypercube $D$ in the form
+тогда гиперкуб $D$ можно представить в виде
 \[
 D=\left\{y^l(x):\; x\in [0,1],\ g_0(y^l(x))\leq 0 \right\},\ 0\leq l \leq L,
 \]
-i.e., $g_0(y) \leq 0$ if $y\in D$ and $g_0(y)>0$ otherwise. Consequently, any point $y \in D$
-has its own preimage $x^l \in [0,1]$ for each mapping $y^l(x),\ 0\leq l\leq L$.
+т.е. $g_0(y) \leq 0$ если $y\in D$, иначе $g_0(y)>0$. Следовательно, любая точка $y \in D$
+имеет прообраз $x^l \in [0,1]$, определяемый соответствующей развёрткой $y^l(x),\ 0\leq l\leq L$.
 
-Thus, each evolvent $y^l(x),\ 0\leq l \leq L,$ generates its own problem of the type
-(\ref{eq:task}) featured by its own extended (in comparison with $D$) search domain $D_l$
-and the additional constraint with the left hand part from (\ref{6_g0})
+Таким образом, каждая развёртка $y^l(x),\ 0\leq l \leq L,$ порождает свою собственную задачу вида
+(\ref{eq:task}), имеющую расширенную (по сравнению с $D$) область поиска $D_l$
+и дополнительное ограничение-неравенство с левой частью вида (\ref{6_g0})
 \begin{equation}\label{6_problem_l}
 \min{\left\{\varphi(y^l(x)):x\in [0,1], \; g_j(y^l(x))\leq 0, \; 0 \leq j \leq m\right\}}, \ 0 \leq l \leq L.
 \end{equation}
+При этом, $L$ копий метода \ref{} решают каждую из указанных задач, на каждой итерации обмениваясь многомерными точками
+следующего испытания и добавляя их прообразы в свою поисковую информацию. Такая схема имеет смысл только при
+наличии $L$ параллельных вычислительных ядер или процессоров.
 
 \begin{figure}[ht]
     \centering
-    \subfloat[Two shifted evolvents on the hypercubes $D_0$ and $D_1$]{{\includegraphics[width=.5\textwidth]{evolvents/shifted.pdf}}\label{fig:shifted_ev}}
+    \subfloat[Две сдвиговые развёртки, определённые на гиперкубах $D_0$ и $D_1$]{{\includegraphics[width=.5\textwidth]{evolvents/shifted.pdf}}\label{fig:shifted_ev}}
     %\subfloat[Hypercubes $D_l$]{{\includegraphics[width=.4\textwidth]{pictures/shifted_cube.png}}\label{fig:shifted_cube}}
-    \subfloat[Two rotated evolvents on the same plane]{{\includegraphics[width=.5\textwidth]{evolvents/rotated.pdf}}\label{6_fig_9}}
+    \subfloat[Две вращаемые развёртки на одной плоскости]{{\includegraphics[width=.5\textwidth]{evolvents/rotated.pdf}}\label{6_fig_9}}
     \caption{Различные развёртки, построенные с низкой плотностью}
 \end{figure}
 
 %------------------------------------------------------------------------------
-\subsection{Rotated Evolvents}
-The application of the scheme for building the multiple evolvents (hereinafter called the shifted
-evolvents or $S$-evolvents) described in Subsection \ref{sec:shifted} allows to preserve the
-information on the nearness of the points in the multidimensional space and, therefore, to
-provide more precise (as compared to a single evolvent) estimate of Lipschitz constant in the
-search process. However, this approach has serious restrictions, which narrow the applicability
-of the parallel algorithms, designed on the base of the $S$-evolvents (see the end of the section
-\ref{sec:seq_comp}).
+\subsection{Вращаемые развёртки}
+Схема построения множества развёрток (здесь и далее будем называть, развёртки, порождённые ей сдвиговыми
+или $S$-развёртками), описанная в Секции~\ref{sec:shifted}, позволяет сохранять часть информации
+о близости точке в многомерном пространстве и, таким образом, обеспечивает более точную (по сравнению с одной развёрткой)
+оценку константы Гёльдера в процессе оптимизации. Однако, однако, этот подход имеет недостаток в виде наличия дополнительного ограничения
+что затрудняет построение эффективных реализаций алгоритма оптимизации на базе $S$-развёрток (см. конец Секции~\ref{sec:seq_comp}).
 
-To overcome complexity of the $S$-evolvent and to preserve the information on the nearness of the points in
-the $N$-dimensional space, one more scheme of building of the multiple mappings was proposed.
-The building of a set of Peano curves not by the shift along the main diagonal of the hypercube
-but by rotation of the evolvents around the coordinate origin is a distinctive feature of the
-proposed scheme \cite{Gergel2009}.
-In Fig.~\ref{6_fig_9} two evolvents being the approximations to Peano curves for the case
-$N=2$ are presented as an illustration.
-Taking into account the initial mapping, one can conclude that current implementation of the
-method allows to build up to $N(N-1)+1$ evolvents for mapping the $N$-dimensional domain
-onto the corresponding one-dimensional intervals. Moreover, the additional constraint  $g_0(y)
-\leq 0$ with $g_0(y)$ from (\ref{6_g0}), which arises in shifted evolvents, is absent. This
-method for building a set of mappings can be ``scaled'' easily to obtain more evolvents (up to
-$2^N$) if necessary.
+Чтобы обойти слложности, возникающие при работе с $S$-развёртками и одновременно сохранить часть иноррмации об окрестностях точек
+$N$-мерном вещественном пространстве, была редложена ещё одна схема построения множества развёрток.
+Эта схема предполагает вместо получения группы развёрток делать сдвиг не сдвиг кривой Пеано по диагонали гиперкуба, а
+её вращение отностиельно центра координат \cite{Gergel2009}.
+На Рис.~\ref{6_fig_9} представлены две развёртки, аппрокисимирующие привую Пеано при $N=2$.
+Получая новые развёртки путём отражения относительно осей координат, можно породить множество развёрток
+мощностью до $2^N$. При этом дополнительное ограничение $g_0(y)$ из (\ref{6_g0}), необходимое для получения
+набора $S$-развёрток, отсутствует.
+%Минусом вращаемых развёрток, по сравнению со сдвиговыми, является отсутствие теоретической гарантии
+%получения близких прообразов для близких многомерных точек.
+%Taking into account the initial mapping, one can conclude that current implementation of the
 
 %------------------------------------------------------------------------------
 \subsection{Неинъективная развёртка}
-%\begin{Russian}
 
 Как уже было сказано в секции \ref{sec:shifted}, потеря информации о близости точек в многомерном
 пространстве может быть частично скомпенсирована использованием множественных отображений $Y_L(x)=\{y^1(x),...,y^L(x)\}$.
@@ -210,3 +202,12 @@ The size of the vicinity was selected as $\delta = 0.01\left\|b-a\right\|_\infty
   \label{tab:shifted_g0}
 \end{center}
 \end{table}
+
+\subsection{Итоги сравнения}
+
+В результате проведённого сравнения различных способов редукции размерности, основанных на отображениях типа кривой Пеано,
+можно сделать вывод о том, что для построения базовой весиии алгоритма оптимизации типа \ref{} с практической стороны
+выгоднее использовать единственную кривую Пеано, кроме случаев низкой размерности или чрезвычайно трудоёмкого вычисления целевой
+функции. Из множественных отображений оптимальным выбором будет использование вращаемых развёрток. Поскольку результаты, полученные для
+алгоритма с одной развёрткой непосредственно распространяются на алгоритмы с вращаемыми развёртками, далее будем рассматривать
+только случай единственной кривой Пеано.
