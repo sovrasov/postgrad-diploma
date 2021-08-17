@@ -1,5 +1,44 @@
-\section{Review of Considered Optimization Methods}
-\subsubsection{Hyperparameters control in AGS}
+\section{Сравнение методов глобальной оптимизации}
+
+В предыдущем разделе был рассмотрен вопрос о выборе базовой схемы редукции размерности размерности задач оптимизации вида \ref{eq:task} для
+алгоритма из \ref{}. В этом разделе рассмотрим сравнение алгоритма глобального поиска с одной развёрткой типа кривой Пеано
+и других алгоритмов глобальной оптимизации, основанных на кардинально различных принципах. Такое сравнение позволит
+выяснить, перспективен ли базовый алгоритм глобального поиска для дальнейших модификаций. Также рассмотрим схему контроля
+параметра надёжности \(r\) в АГП, позволяющую в некоторых случаях снизить зависимость метода он его выбора.
+
+\subsection{Методы глобальной оптимизации для сравнения}
+\begin{itemize}
+  \item \textbf{Multi Level Single Linkage} \cite{Kan1987StochasticGO}. MLSL является улучшенным вариантом мультистартовой схемы \cite{}.
+  Алгоритм сэмплирует стартовые точки, равномерно распределённые по области посика, и производит локальную оптимизацию из них.
+  В сравнении со стандартной мультистартовой схемой MLSL использует кластеризацию и набор эвристических правил
+  для избежания повторных локальных спусков в уже обнаруженные лакальные минимумы.
+
+  \item \textbf{DIRECT} \cite{Jones2009}. Метод является детерминированным и рекурсивно разделяет
+  область поиска, формируя дерево гиперпрямоугольников. DIRECT использует значения целевой функции и
+  оценку константы Липшица (\ref{eq:lip}) для получения оценки перспективности дальнейшего разбиения каждого из гиперинтервалов.
+
+  \item \textbf{Locally-biased DIRECT (DIRECT$l$)} \cite{Gablonsky2001}. Вариация метода
+  DIRECT, которая меньше уделяет внимания гиперинтервалам с низкой оценкой перспективности.
+  Эта вариация сходится быстрее на задачах с небоьлшим количеством локальных минимумов,
+  но в сложных случаях может не найти глобальный.
+
+  \item \textbf{Dual Simulated Annealing} \cite{XIANG1997216}. This stochastic method is a
+combination of the Classical Simulated Annealing and the Fast Simulated Annealing coupled to a
+strategy for applying a local search on accepted locations. It converges much faster than both parent
+algorithms, CSA and FSA.
+
+  \item \textbf{Differential Evolution} \cite{Storn1997}. DE является адаптацией оригинального генетического алгоритма
+  к непрерывному пространству поиска.
+
+  \item \textbf{Controlled Random Search} \cite{Price1983}. CRS производит испытания в случайно сгенерированных начальных
+  точках и определяет следующую точку для испытания на основе симплекса, построенного из случайно выбранных точек более ранних испытаний.
+  CRS не считается эволюционным алгоритмом, хотя хранит точки, похожие на популяцию, и выполняет случайные трансформации над ними,
+  по аналогии с применением оператора мутации.
+
+  \item \textbf{StoGO} \cite{Madsen1998}. StoGO разделяет пространство поиска на гиперпрямогульники и использует метод ветвей и
+  границ, вычисляя верхние оценки минимумов в подобластях с помощью локальной оптимизации.
+
+\subsubsection{Контроль параметра надёжности в АГП}
 
 The parameter $r$ from (\ref{eq:step2}) affects the global convergence of AGS directly (see
 \cite{strSergGO}, Chapter 8):
@@ -32,44 +71,6 @@ If two phases are not enough, the process is continued. This way, a better trade
 between the exploration and the exploitation is achieved.
 Further, we will denote the method utilizing the scheme described above as AGS-AR.
 
-\subsection{Other Optimization Methods}
-\begin{itemize}
-  \item \textbf{Multi Level Single Linkage} \cite{Kan1987StochasticGO}. MLSL is an improved
-multistart algorithm.
-  It samples low-discrepancy starting points and does local optimizations from them. In contrast to
-the dummy multistart schemes
-  MLSL uses some clustering heuristics to avoid multiple local descents to already explored local
-minima.
-
-  \item \textbf{DIRECT} \cite{Jones2009}. The algorithm is deterministic and recursively divides
-the search space and forms a tree of hyper-rectangles (boxes). DIRECT uses the objective function
-values and the Lipschitz condition (\ref{eq:lip}) to estimate promising boxes.
-
-  \item \textbf{Locally-biased DIRECT (DIRECT$l$)} \cite{Gablonsky2001}. It's a variation of
-DIRECT which pays less attention to non-promising boxes and therefore
-  has less exploration power: it can converge faster on problems with few local minima, but lost the
-global one in complicated cases.
-
-  \item \textbf{Dual Simulated Annealing} \cite{XIANG1997216}. This stochastic method is a
-combination of the Classical Simulated Annealing and the Fast Simulated Annealing coupled to a
-strategy for applying a local search on accepted locations. It converges much faster than both parent
-algorithms, CSA and FSA.
-
-  \item \textbf{Differential Evolution} \cite{Storn1997}. DE is an adaptation of the original genetic
-algorithm to
-  the continuous search domain.
-
-  \item \textbf{Controlled Random Search} \cite{Price1983}. The CRS starts with a set of random
-points and then defines
-  the next trial point in relation to a simplex chosen randomly from a stored configuration of points.
-CRS in not an
-  evolutional algorithm, although stores something like population and performs transformation
-resembling a mutation.
-
-  \item \textbf{StoGO} \cite{Madsen1998}. StoGO is dividing the search space into smaller hyper-
-rectangles via a branch-and-bound approach,
-  and searching them by a local-search algorithm, optionally including some randomness.
-
 \end{itemize}
 
 All the mentioned algorithms are available in source codes as parts of wide-spread optimization packages.
@@ -77,90 +78,7 @@ DIRECT, DIRECT$l$, CRS, MLSL and StoGO are part of the NLOpt library \cite{nlopt
 Differential Evolution and DSA can be found in
 the latest version of the SciPy \cite{scipy} package for Python.
 
-\section{Tools for Comparison of Global Optimization Algorithms}
-
-The use of the sets of test problems with known solutions generated by some random mechanisms is
-one of commonly accepted approaches to comparing the optimization algorithms
-\cite{Beiranvand2017}. In the present work, we will use two generators of test problems generating
-the problems of different nature \cite{grishaginClass, Gaviano2003} \footnote{Software implementations of
-these generators are available in source codes at the page \url{https://github.com/sovrasov/global-optimization-test-problems}}.
-
-Let us denote the problem set obtained with the use of the first generator from \cite{grishaginClass}
-as \(F_{GR}\). The mechanism of generation of the problems \(F_{GR}\) doesn't provide the
-control of the problem complexity and of the number of local optima. However, the generated
-functions are known to be the multiextremal ones essentially. Besides, the problems generated by
-\(F_{GR}\) are the two-dimensional ones. In the present work, we will use 100 functions from the
-class \(F_{GR}\) generated randomly.
-
-The GKLS generator \cite{Gaviano2003} allows obtaining the problems of given dimensionality
-with given number of extrema. Moreover, GKLS allows adjusting the complexity of the problems by
-decreasing or increasing the size of the global minimum attractor. In
-\cite{SergeyevKvasov2006} the parameters of the generator allowing generating the sets of 100
-problems each of two levels of complexity (Simple and Hard) of the dimensionality equal to 2, 3, 4,
-and 5 are given. Following the authors of the GKLS generator, we will use the parameters proposed
-by them and, this way, add 800 more problems of various dimensionalities and complexity into the
-test problem set.
-
-Let us suppose a test problem to be solved if the optimization method executes the scheduled trial
-\(y^k\) in a \(\delta\)-vicinity of the global minimum \(y^*\), i.e. $\left\|y^k-y^*\right\|\leq \delta
-= \alpha\left\|b-a\right\|$, where \(a\) and \(b\) are the left and the right boundaries of the hypercube
-from (\ref{eq:task}), $\alpha$ is relative precision. If this relation is not fulfilled before the expiration of the limit of the number of
-trials, the problem was considered to be unsolved. The limit of the number of trials and $\alpha$ were set
-for each problem class according to the dimensionality and complexity (see Table \ref{tab:limits}).
-
-\begin{table}
-\begin{center}
-\caption{Trials limits and relative precision for the test problem classes}
-  \begin{tabular}{|l|{c}|{c}|}
-    \hline
-  Problems class & Trials limit & $\alpha$\\
-  \hline
-  \(F_{GR}\) & 5000 & 0.01 \\
-  \hline
-  GKLS 2d Simple & 8000 & 0.01 \\
-  \hline
-  GKLS 2d Hard & 9000 & 0.01 \\
-  \hline
-  GKLS 3d Simple & 15000 & 0.01 \\
-  \hline
-  GKLS 3d Hard & 25000 & 0.01 \\
-  \hline
-  GKLS 4d Simple & 150000 & $\sqrt[4]{10^{-6}}$ \\
-  \hline
-  GKLS 4d Hard & 250000 & $\sqrt[4]{10^{-6}}$ \\
-  \hline
-  GKLS 5d Simple & 350000 & $\sqrt[5]{10^{-7}}$ \\
-  \hline
-  GKLS 5d Hard & 600000 & $\sqrt[5]{10^{-7}}$ \\
-  \hline
-  \end{tabular}
-  \label{tab:limits}
-\end{center}
-\end{table}
-
-Let us consider the averaged number of trials executed to solve a single problem and the number of
-solved problems as the characteristics of the optimization method on each class. The less the number
-of trials, the faster the method converges to a solution, hence the less times it turns to a potentially
-computation-costly procedure of computing the objective function. The number of solved problems
-evidences the reliability of the method at given parameters on the class of test problems being
-solved. In order to make independent the quantities featuring the reliability and the speed of convergence,
-averaged number of trials always was calculated taking into account solved problems only.
-
-The average number of trials doesn't represent the real behavior of an optimization method
-on a problems set in some cases. For an instance, if a method performs well on the most problems
-and spends too much trials to solve the least several problems, we wouldn't catch such
-case looking at the average number of trials only.
-As an advanced measure of performance we will use the operating characteristic \cite{grishaginClass}.
-It's defined by a set of points on the \((K, P)\) plane where \(K\) is the average number of search trials
-conducted before satisfying the termination condition when minimizing a function
-from a given class, and \(P\) is the proportion of problems solved successfully.
-If at a given \(K\), the operating characteristic of a method goes higher than one
-from another method, it means that at fixed search costs, the former method has a
-greater probability of finding the solution. If some value of \(P\) is fixed, and the
-characteristic of a method goes to the left from that of another method, the former
-method requires fewer resources to achieve the same reliability.
-
-\section{Results of Numerical Experiments}
+\section{Результаты численных экспериментов}
 \label{sec:experiments}
 The results of various algorithms on different problem classes depend on the adjustments of
 algorithms directly. In most cases, the authors of software implementations are oriented onto the
@@ -280,11 +198,11 @@ reliability.
 
 \begin{figure}[ht]
   \centering
-  \subfloat[4d Simple]{{\includegraphics[width=.5\textwidth]{images/gklss4d.pdf}}\label{fig:s4d}}
-  \subfloat[4d Hard]{{\includegraphics[width=.5\textwidth]{images/gklsh4d.pdf}}\label{fig:h4d}}
+  \subfloat[4d Simple]{{\includegraphics[width=.5\textwidth]{comparison/gklss4d.pdf}}\label{fig:s4d}}
+  \subfloat[4d Hard]{{\includegraphics[width=.5\textwidth]{comparison/gklsh4d.pdf}}\label{fig:h4d}}
 
-  \subfloat[5d Simple]{{\includegraphics[width=.5\textwidth]{images/gklss5d.pdf}}\label{fig:s5d}}
-  \subfloat[5d Hard]{{\includegraphics[width=.5\textwidth]{images/gklsh5d.pdf}}\label{fig:h5d}}
+  \subfloat[5d Simple]{{\includegraphics[width=.5\textwidth]{comparison/gklss5d.pdf}}\label{fig:s5d}}
+  \subfloat[5d Hard]{{\includegraphics[width=.5\textwidth]{comparison/gklsh5d.pdf}}\label{fig:h5d}}
   \caption{Operating characteristics of the algorithms when solving problems from the GKLS 4d and 5d classes. Best viewed in color.}
 \end{figure}
 
@@ -308,7 +226,7 @@ experiments with the following settings were conducted on the problems from GKLS
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.6\textwidth]{images/ar_stab.pdf}
+  \includegraphics[width=.6\textwidth]{comparison/ar_stab.pdf}
   \caption{Operating characteristics of AGS and AGS-AR with different hyperparameters
   when solving problems from the GKLS 5d Simple classe. Best viewed in color.}
   \label{fig:stability}
