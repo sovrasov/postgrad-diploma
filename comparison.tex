@@ -4,7 +4,7 @@
 алгоритма из \ref{}. В этом разделе рассмотрим сравнение алгоритма глобального поиска с одной развёрткой типа кривой Пеано
 и других алгоритмов глобальной оптимизации, основанных на кардинально различных принципах. Такое сравнение позволит
 выяснить, перспективен ли базовый алгоритм глобального поиска для дальнейших модификаций. Также рассмотрим схему контроля
-параметра надёжности \(r\) в АГП, позволяющую в некоторых случаях снизить зависимость метода он его выбора.
+параметра надёжности \(r\) в AGS, позволяющую в некоторых случаях снизить зависимость метода от его выбора.
 
 \subsection{Методы глобальной оптимизации для сравнения}
 \begin{itemize}
@@ -22,10 +22,9 @@
   Эта вариация сходится быстрее на задачах с небоьлшим количеством локальных минимумов,
   но в сложных случаях может не найти глобальный.
 
-  \item \textbf{Dual Simulated Annealing} \cite{XIANG1997216}. This stochastic method is a
-combination of the Classical Simulated Annealing and the Fast Simulated Annealing coupled to a
-strategy for applying a local search on accepted locations. It converges much faster than both parent
-algorithms, CSA and FSA.
+  \item \textbf{Dual Simulated Annealing} \cite{XIANG1997216}. Этот стохастический метода является комбинацией
+  классическойго метода имитации отжига (CSA \cite{annealing}) и быстрого метода имитации отжига (FSA \cite{SZU1987157}), совмещенной
+  с применением локальной оптимизации. Метод сходится гораздо быстрее, чем CSA и FSA.
 
   \item \textbf{Differential Evolution} \cite{Storn1997}. DE является адаптацией оригинального генетического алгоритма
   к непрерывному пространству поиска.
@@ -37,68 +36,55 @@ algorithms, CSA and FSA.
 
   \item \textbf{StoGO} \cite{Madsen1998}. StoGO разделяет пространство поиска на гиперпрямогульники и использует метод ветвей и
   границ, вычисляя верхние оценки минимумов в подобластях с помощью локальной оптимизации.
+\end{itemize}
 
-\subsubsection{Контроль параметра надёжности в АГП}
+Все перечисленные алгоритмы доступны в исходных кодах как компоненты широко распространённых программных пакетов.
+DIRECT, DIRECT$l$, CRS, MLSL и StoGO являются компонентами библиотеки NLOpt \cite{nlopt}.
+Реализации DE и DSA распространяются в пакете SciPy \cite{scipy} для языка Python.
 
-The parameter $r$ from (\ref{eq:step2}) affects the global convergence of AGS directly (see
-\cite{strSergGO}, Chapter 8):
-at high enough value of $r$, the method converges to all global minima of the objective function with
-guarantee.
-At the same time, according to (\ref{eq:step3_2}) and (\ref{step5}), at the infinitely high value of $r$, AGS turns into
-the brute force search method on a uniform grid.
+\subsubsection{Контроль параметра надёжности в AGS}
 
-In the ideal case, in order to provide the highest convergence speed, the estimate of the Lipschitz
-constant from (\ref{eq:step2})
-should not be too overestimated, but in practice the actual value of $L$ from (\ref{eq:lip}) in
-unknown, and one has either to take an obviously overestimated value of $r$ or to execute several
-runs of AGS with different parameters. In order to resolve the problem of choosing $r$ to some extent,
-let us use the following scheme:
+Параметр $r$ из (\ref{eq:step2}) непосредственно влияет на глобальную сходимость AGS (см. \cite{strSergGO}, Глава 8):
+при достаточно большом значении $r$ метод гарантированно сходится ко всем глобальным минимумам целевой функции.
+В то же время, согласно (\ref{eq:step3_2}), при бесконечно большом значении $r$ AGS превращается в полный перебор
+по равномерной сетке.
+
+В идеальном случае для обеспечения наибольшей скорости сходимости оценка константы Липшица из (\ref{eq:step2})
+не должна быть слишком завышенной, но на практике реальное значение $L$ из (\ref{eq:lip}) неизвестно и приходится
+либо брать заведомо большое значение $r$, либо проводить несколько запусков AGS с разными параметрами. Чтобы в некотрой
+степени решить обозначенную проблему выбора $r$ будем использовать следующую схему:
 \begin{itemize}
-  \item execute $q$ iterations of AGS with $r=r_{max}$;
-  \item execute $q$ iterations of AGS with $r=r_{min}$;
-  \item repeat the above steps either until convergence or until the allowed number of iterations are
-exhausted.
+  \item совершить $q$ итераций AGS при $r=r_{max}$;
+  \item совершить $q$ итераций AGS при $r=r_{min}$;
+  \item повторять предыдущие шаги до схоимости или исчерпания лимита итараций.
 \end{itemize}
 
-In the above algorithm, $r_{min} < r_{max}$, $q > 1$. Instead one parameter $r$, now
-3 ones should be selected. However, according to the results of the numerical experiments, it is easier
-than to find the optimal value of $r$.
-Intuitively, the practical efficiency of the proposed scheme can be explained by the fact that now the
-operation of the method takes place in two modes: the global search with $r=r_{max}$ and the local
-one with $r=r_{min}$. If during the global search phase, the method approached the global minimum
-whereas during the next phase, the estimate of the global minimum  would be refined rapidly.
-If two phases are not enough, the process is continued. This way, a better trade-off
-between the exploration and the exploitation is achieved.
-Further, we will denote the method utilizing the scheme described above as AGS-AR.
+В указанном алгоритме $r_{min} < r_{max}$, $q > 1$. Вместо одного параметра $r$ теперь
+необходимо выбирать 3, однако, согласно численным экспериментам, сделать это проще, чем найти оптимальное значение $r$.
+Интуитивно практическую эффективность предложенной схемы можно объяснить тем, что теперь работа метода происходит в
+двух режимах: глобальный поиск при $r=r_{max}$ и локальный при $r=r_{min}$. Если во время фазы глобального посика
+метод приблизился к глобальному минимуму, то во время следующей фазы оценка глобального минимума будет быстро уточнена.
+Если двух фаз не хватило, то процесс продолжается. Таким образом выбирается более оптимальный компромисс
+между локальной и глобальной оптимизацией. Далее будем обозначать метод, использующий описанную схему как AGS-AR.
 
-\end{itemize}
-
-All the mentioned algorithms are available in source codes as parts of wide-spread optimization packages.
-DIRECT, DIRECT$l$, CRS, MLSL and StoGO are part of the NLOpt library \cite{nlopt}.
-Differential Evolution and DSA can be found in
-the latest version of the SciPy \cite{scipy} package for Python.
-
-\section{Результаты численных экспериментов}
+\subsection{Результаты численных экспериментов}
 \label{sec:experiments}
-The results of various algorithms on different problem classes depend on the adjustments of
-algorithms directly. In most cases, the authors of software implementations are oriented onto the
-problems of medium difficulty. In order to obtain a satisfactory result when solving the essentially
-multiextremal problems, a correction of some parameters is required. When conducting the
-comparison, the following parameters for the methods were employed:
+Результаты решения методами задач глобальной оптимизации различной сложности напрямую зависят от
+выбранных параметров методав. В большинстве случаев авторы программных реализаций ориентируются
+на задачи средной сложности. Чтобы получить приемлемые результаты на существенно многоэкстремальных
+задачах, параметры некоторых методов были выбраны слудующим образом:
 \begin{itemize}
-  \item in the AGS-AR method, the parameter of alternation the
-  global and local stages $q$ was set to be equal to $50\cdot\log_2(N-1)\cdot N^2$, also $r_{min}=3,\:r_{max}=2\cdot r_{min}$;
-  \item in the DIRECT and DIRECT\(l\) methods, the parameter \(\epsilon=10^{-4}\);
-  \item in the SDA method, the parameter \(visit=2.72\).
+  \item в AGS-AR параметр чередования локальной и глобальной фаз $q$ был выбран равным $50\cdot\log_2(N-1)\cdot N^2$, а $r_{min}=3,\:r_{max}=2\cdot r_{min}$;
+  \item в DIRECT и DIRECT\(l\) параметр \(\epsilon=10^{-4}\);
+  \item в SDA параметр \(visit=2.72\).
 \end{itemize}
 
-The rest parameters were varied subject to the problem class (see Table \ref{tab:params}).
-For the AGS the value ot the $r$ parameter, such that the method solves all problems and performs the minimum amount of trials,
-was estimated by brute force on the uniform grid with step $0.1$.
+Остальные параметры варьировались в зависимости от набора тестовых задач (см. Таблицу~\ref{tab:params}).
+Для AGS минимальное значение параметра $r$ такое, что все задачи заданного класса решаются, было получено перебором по равномерной сетке с шагом $0.1$.
 
 \begin{table}
 \begin{center}
-\caption{Class-specific parameters of the optimization algorithms}
+\caption{Параметры методов оптимизации для различных тестовых задач}
   \begin{tabular}{|l|{c}|{c}|{c}|}
     \hline
     & AGS & CRS & DE\\
@@ -128,8 +114,7 @@ was estimated by brute force on the uniform grid with step $0.1$.
 
 \begin{table}
 \begin{center}
-\caption{Averaged number of trials executed by optimization methods for solving the test
-optimization problems}
+\caption{Среднее количество испытаний, затраченное методами оптимизации при решении задач различных классов}
 \resizebox{\textwidth}{!}{%
   \begin{tabular}{|l|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|}
     \hline
@@ -158,17 +143,15 @@ optimization problems}
 \end{center}
 \end{table}
 
-The results of running the optimization methods on the considered problem classes are presented in
-Tables \ref{tab:trials}, \ref{tab:solved}. The DIRECT, AGS and AGS-AR methods have demonstrated the
-best convergence speed on all classes, at that AGS-AR inferior to DIRECT on the 2d problems from the
-Simple classes and has an advantage on the problems of the Hard classes. As one can see from Table
-\ref{tab:solved}, the deterministic methods (AGS, AGS-AR, DIRECT, and DIRECT\(l\)) were the
-most reliable. Among the stochastic methods, MLSL and SDA have demonstrated the highest
-reliability.
+Результаты запуска рассматриваемых методов оптимизации на наборах тестовых задач представлены в таблицах \ref{tab:trials}, \ref{tab:solved}.
+DIRECT, AGS, AGS-AR продемонстрировали лучшую скорость сходимости на всех классах, при этом AGS-AR уступает DIRECT
+на двухмерных задачах класса Simple, но имеет преимущество на задачах класса Hard. Как можно видеть из Table~\ref{tab:solved},
+детерминированные методы (AGS, AGS-AR, DIRECT и DIRECT\(l\)) оказались более надёжными, т.е. решили больше тестовых задач.
+Среди стохастических методов самую высокую надёжность показали MLSL и SDA.
 
 \begin{table}
 \begin{center}
-\caption{Number of test optimization problems solved by the methods}
+\caption{Количество задач оптимизации, решённых методами при заданном лимите испытаний (общее количество задач в каждом наборе равно 100)}
   \begin{tabular}{|l|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|{c}|}
     \hline
     & AGS & AGS-AR & CRS & DIRECT & DIRECT\(l\) & MLSL & SDA & DE & StoGO \\
@@ -203,15 +186,17 @@ reliability.
 
   \subfloat[5d Simple]{{\includegraphics[width=.5\textwidth]{comparison/gklss5d.pdf}}\label{fig:s5d}}
   \subfloat[5d Hard]{{\includegraphics[width=.5\textwidth]{comparison/gklsh5d.pdf}}\label{fig:h5d}}
-  \caption{Operating characteristics of the algorithms when solving problems from the GKLS 4d and 5d classes. Best viewed in color.}
+  \caption{Операционные характеристики методов при решении задач из классов GKLS 4d и 5d.}
 \end{figure}
 
-Operating characteristic of the methods (Figures \ref{fig:s4d}, \ref{fig:h4d}, \ref{fig:s5d}, \ref{fig:h5d})
-demonstrates that AGS and AGS-AR faster than the other methods achieve 100\% success rate. Also on GKLS 5d Simple the DIRECT
-generally has the best performance, but there are several hard problems that affect it's average number of
-trials metric.
+Операционные характеристики методов (Рис. \ref{fig:s4d}, \ref{fig:h4d}, \ref{fig:s5d}, \ref{fig:h5d})
+показывают, что AGS и AGS-AR быстрее других методов достигают 100\% надёжности. Также на классе GKLS 5d Simple DIRECT
+имеет скорость сходимости выше, чем у других методов, но есть несколько сложных задач, решение которые решаются существенно дольше других,
+что влияет на среднее количество испытаний.
 
-\paragraph{Robustness of AGS and AGS-AR to the Hyperparameters Choice.}
+\paragraph{Чувствительность AGS и AGS-AR к выбору параметров.}
+
+Чтобы
 
 In order to investigate the influence of hyperparameters to the convergence speed of the AGS and AGS-AR,
 experiments with the following settings were conducted on the problems from GKLS 5d Simple class:
