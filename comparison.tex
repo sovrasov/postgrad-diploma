@@ -196,48 +196,41 @@ DIRECT, AGS, AGS-AR продемонстрировали лучшую скоро
 
 \paragraph{Чувствительность AGS и AGS-AR к выбору параметров.}
 
-Чтобы
-
-In order to investigate the influence of hyperparameters to the convergence speed of the AGS and AGS-AR,
-experiments with the following settings were conducted on the problems from GKLS 5d Simple class:
+Чтобы оценить степень влияния настроек методов на скорость сходимости AGS и AGS-AR, были проведены
+эксперименты на классе задач GKLS 5d Simple со следующими параметрами:
 \begin{itemize}
-  \item AGS with $r=4$ (like in the Table \ref{tab:params});
-  \item AGS with $r=6$;
-  \item AGS-AR with parameters from the beginning of the Section \ref{sec:experiments}
+  \item AGS при $r=4$ (как в Таблице~\ref{tab:params});
+  \item AGS при $r=6$;
+  \item AGS-AR с параметрами, указанными в начале Секции~\ref{sec:experiments}
   ($q=50\cdot\log_2(4)\cdot 25 = 2500$, $r_{min}=3,\:r_{max}=2\cdot r_{min}$);
-  \item AGS-AR with $r_{max}=8$ and other parameters from the previous experiment;
-  \item AGS-AR with $q=1000$ and other parameters from the beginning of the Section \ref{sec:experiments};
+  \item AGS-AR при $r_{max}=8$ and и остальными параметрами как в предыдущем эксперименте;
+  \item AGS-AR при $q=1000$ и другими параметрами как в начале Секции~\ref{sec:experiments}.
 \end{itemize}
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.6\textwidth]{comparison/ar_stab.pdf}
-  \caption{Operating characteristics of AGS and AGS-AR with different hyperparameters
-  when solving problems from the GKLS 5d Simple classe. Best viewed in color.}
+  \caption{Операционные характеристики AGS и AGS-AR на классе GKLS 5d Simple
+  с различными параметрами.}
   \label{fig:stability}
 \end{figure}
 
-The operating characteristics collected in the experiments described above are shown in the Figure \ref{fig:stability}.
-AGS with $r=6$ (the cyan-colored curve) shows the worst convergence speed, which indicates that AGS is very sensitive to choice of $r$.
-Since on the start AGS-AR has the same value of $r$ as AGS with $r=6$, operating characteristics of these methods
-are identical up to $K=2500$. After that point AGS-AR switches to $r=3$ and rapidly begins to increase the amount of solved problems
-until the next exploration phase on $K=5000$. Intervals where AGS-AR works with $r=r_{max}$ are visible on the operating characteristics as plateaus.
-Variations of $r$ and $q$ didn't drastically change the operating characteristic of AGS-AR. The latter observation shows robustness of the proposed
-AGS modification with the alternating parameter $r$.
+Операционные характеристики, полученные в экспериментах, описанных выше, представлены на Рис.~\ref{fig:stability}.
+AGS при $r=6$ (голубая кривая) показывает самую медленную сходимость, что говорит о высокой чувствительности AGS
+к выбору значения $r$. Поскольку AGS-AR используе то же самое значение $r$ как AGS при $r=6$, операционные характеристики
+этих методов идентичны до точки $K=2500$. После этой границы AGS-AR переключается на $r=3$ и количество решённых задач
+начинает быстро возрастать, вплоть до начала следующей фазы глобального поиска при $K=5000$. Интервалы, на которых
+AGS-AR работает с $r=r_{max}$ видны на операционных характеристиках как плато. Изменение $r$ и $q$ влияет на операционнух характеристику
+AGS-AR незнаичтельно. Это наблюдение подтверждает надёжность предложенной модификации AGS с переменным параметром $r$.
 
-\section{Conclusions}
+\section{Итоги сравнения методов}
 
-In the present paper, several global optimization algorithms were considered.
-A comparison of efficiencies of these ones has been done on a set of test problems.
-Also a scheme of hyperparameters control for the AGS algorithms was proposed and evaluated.
-The results presented in this work allow making the following conclusions:
+В результате сравнения разлиыных методов оптимизации, были сделаны следующие выводы:
 \begin{itemize}
-  \item the proposed modification of the stock AGS, AGS-AR allows to pay less attention to initial hyperparameter tuning and
-  performs on-par with properly tuned AGS;
-  \item AGS-AR method has demonstrated the convergence
-  speed and reliability at the level of DIRECT and exceeds many other algorithms, the open-source
-  implementations of which are available;
-  \item the stochastic optimization methods inferior to the deterministic ones in the convergence
-speed and in reliability. It is manifested especially strongly on more complex multiextremal
-problems.
+  \item предложенная модификация AGS, AGS-AR менее чувствительна к параметрам и сходится так же быстро, как AGS
+  с заранее подобранными под класс задач параметрами;
+  \item AGS-AR продемонстрировал надёжность и скорость сходимости на уровне удргого детеримнированного метода, DIRECT,
+  и превзошёл на рассмотрнных тестовых задачах многие другие методы, реализации которых так же доступны в исходных кодах;
+  \item на рассмотренных существенно многоэкстремальных задачах малой размерности стохастические методы оптимизации
+  существенно уступают в скорости сходимости и надёжности детерминированным.
 \end{itemize}
