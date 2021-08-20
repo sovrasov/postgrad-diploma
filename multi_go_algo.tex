@@ -1,5 +1,25 @@
 \section{Алгоритм, решающий множество задач}
 
+The feasible domain can also be defined by the constraints that essentially complicate the problem.
+The problem statement in this case will take the following form:
+\begin{equation}
+  \label{eq:constrained_problem}
+  \varphi(y^*)=\min\{\varphi(y):y\in G\},\:G=D \cap \{y: g_j(y)\leqslant 0, 1\leqslant j\leqslant m\}.
+\end{equation}
+
+Let us set \(g_{m+1}(y)=\varphi(y)\). Hereafter, we shall assume all functions
+\(g_k(y),1\leqslant k \leqslant m+1\),
+to satisfy the Lipschitz condition on the hyperinterval \(D\).
+
+
+Further, let us consider solving a series of \(q\) problems of the kind
+(\ref{eq:constrained_problem}):
+\begin{equation}
+  \label{eq:many_problems}
+  \min\left\{\varphi_1(y), y\in G_1 \right\}, \min\left\{\varphi_2(y), y\in G_2\right\},...,
+\min\left\{\varphi_q(y), y\in G_q\right\}.
+\end{equation}
+
 Далее следуя подходу, описанному в \cite{BarkalovStrongin2018}, для решения серии задач (\ref{eq:many_problems}) будем
 использовать \(q\) синхронно работающих копий ИАГП с тем лишь отличием, что на шаге 6 при выборе
 интервала с наилучшей характеристикой, выбор будет осуществляться из всех интервалов, которые
@@ -19,6 +39,160 @@
 и заключается в выборе \(p\) интервалов на шаге 6 и выполнения \(p\) испытаний параллельно
 на следующем шаге. При этом все ресурсы метода в рамках итерации могут быть направлены как на одну, так и
 на \(l\leqslant p\) задач одновременно (в зависимости от того, какой из задач принадлежат выбранные методам интервалы).
+
+\subsection{Условия сходимости}
+\label{sec:conv_method}
+
+Достаточные условия сходимости иетода из Секции~\ref{sec:method} в случае \(q=1\) приведены в \cite{Strongin2000}.
+\begin{theorem} (Достаточные условия сходимости AGS)
+  \label{th:single_conv}
+  Пердположим, что следующие утверждения справедливы:
+  \begin{enumerate}
+    \item \(D\ne\emptyset\), задача (\ref{eq:constrained_problem}) имеет решение.
+    \item Функции \(g_j(y)\leqslant 0, 1\leqslant j\leqslant m + 1\), липшицевы в области \(D\) с соответствующими константами \(L_i\)
+     (здесь \(g_{m+1}(y)=\varphi(y)\)).
+    \item Для достаточно больших \(k\) из (\ref{eq:points}),
+    значения \(\mu_\nu\) из (\ref{step2}) удовлетворяют неравенствам:
+    \begin{equation}
+      r_\nu\mu_\nu > 2^{3-1/N}L_\nu \sqrt{N+3},\: 1\leqslant \nu \leqslant m + 1.
+    \end{equation}
+  \end{enumerate}
+  Тогда любая предельная точка \(\overline{y}\) последовательности \(\{y_k\} = \{y(x_k)\}\), сгенерированная
+  AGS при решении задачи (\ref{eq:constrained_problem}) является допустимой и удовлетворяет условиям
+\begin{equation}
+  \label{eq:conv_cond}
+  \varphi(\overline{y})=\inf\{ \varphi(y^k): g_i(y^k)\leqslant 0,1\leqslant i\leqslant m, k=1,2,\dots\}=\varphi(y^*).
+\end{equation}
+\end{theorem}
+
+\begin{remark}
+  \label{rem:r1}
+  Из соотношения между константами Гёльдера и Липшица из неравенства (\ref{eq:conv_cond}) следует, что
+  параметр \(r_\nu\) из (\ref{step3_1}) должен удовлетворять условию
+  \begin{equation}
+    r_\nu > 2^{2 - 1/N}.
+  \end{equation}
+\end{remark}
+
+\begin{theorem} (О сходимости MIAGS) Пусть условия 1-3 Теоремы~\ref{th:single_conv} верны для каждой задачи \(i,\:1\leqslant i\leqslant q\) из (\ref{eq:many_problems}),
+т.е. каждая из задач может быть решена AGS.
+  Тогда в процессе решения \(q\) задач MIAGS сгенерирует
+  \(q\) бесконечных последовательностей \(\{y^k_i\},\:1\leqslant i\leqslant q\), таких, что
+  \begin{displaymath}
+    \varphi_i(\overline{y_i})=\inf\{ \varphi(y^k_i): g^i_j(y^k_i)\leqslant 0,1\leqslant j\leqslant m_i, k=1,2,\dots\}=\varphi_i(y^*_i).
+  \end{displaymath}
+\end{theorem}
+\begin{proof}
+  Рассмотрим две случайно выбранные задачи из множества (\ref{eq:many_problems})
+  \begin{equation}
+      \begin{array}{lr}
+        \min\{\varphi(y):y\in D_1,\: g_j^\varphi(y)\leqslant 0, 1\leqslant j\leqslant m_1\}, \\
+        \min\{\psi(y):y\in D_2,\: g_j^\psi(y)\leqslant 0, 1\leqslant j\leqslant m_2\}.
+      \end{array}
+  \end{equation}
+  Обозначим характеристики интервалов (\ref{step3_1}) в первой задаче как \(R_\varphi(i)\)
+  и во второй задаче как \(R_\psi(j)\). Принимая во внимание обозначения, имеем:
+  \begin{equation}
+      \begin{array}{lr}
+        R_\varphi(t_\varphi)=\max_{1\leqslant i\leqslant k}R_\varphi(i), \\
+        R_\psi(t_\psi)=\max_{1\leqslant j\leqslant s}R_\psi(j),
+      \end{array}
+  \end{equation}
+  где \(k\) обозначает количество испытаний, сделанных при решении первой задачи, а \(s\)
+  это количество испытаний, сделанных при решении второй. Последовательность точек испытаний
+  в первой задаче обозначим \(\{v^k\}\), во второй задаче \(\{u^s\}\).
+  Значения \(z^k=g^\varphi_\nu(v_k),\nu =\nu (v_{k})\) соответствуют точкам \(\{v^k\}\),
+  а значения \(w^s=g^\psi_\nu(u_s),\nu =\nu(u_{s})\) соответствуют точкам \(\{u^s\}\).
+
+  Когда две задачи решаются одновременно, метод выбирает интервал для следубщего испытаний в
+  соответствии с условием:
+  \begin{equation}
+    R(t) = \max\{R_\varphi(i),R_\psi(j)\}.
+  \end{equation}
+
+  Пусть алгоритм решает две задачи и счётчик испытаний равен \(l = k + s, l=0,1,2,\dots\).
+  Тогда, поскольку Теорема~\ref{th:single_conv} справедлива для обеих задач, как минимум одна из последовательностей
+  \(\{v^k\}\) или \(\{u^s\}\) будет бесконечной (пусть это \(\{v^k\}\)).
+  Если доказать, что обе последовательности бесконечны, то это будет означать наличие сходимости в обеих задачах.
+
+  Рассмотрим предельную точку \(\overline{v}\in [v_{i-1},v_i]\), где \(i=i(k)\). Индексы \(v_{i-1}\;,v_i\)
+  могут быть равны или различаться, но в силу сходимости, при достаточно больших \(k\) будут стабильны.
+  %will be steady  equal to \(m_1+1\) (if \(\overline{v}\) is
+  %an interior point of the feasible domain produced by constraints \(g^\varphi_p(y),p=\overline{1,m_1}\))
+  %or \(\nu(v_{i-1})\ne\nu(v_i)\) (if \(\exists p: 1\leqslant p\leqslant m_1, g^\varphi_p(y(\overline{v}))=0\)).
+  В первом случае алгоритм будет испльзовать первую ветку правила (\ref{step3_1}), иначе он будет применять одну из оставшихся ветвей.
+
+  Рассмотрим сначала первый случай: из (\ref{step2})
+  \begin{displaymath}
+    \frac{|z_i-z_{i-1}|}{\Delta_i} \leqslant \mu_{\varphi,\nu}.
+  \end{displaymath}
+  Принимая во внимание это неравенстов, получим верхнюю оценку:
+  \begin{displaymath}
+    \frac{(z_i-z_{i-1})^2}{r_\nu^2\mu_{\varphi,\nu}^2\Delta_i}=\frac{(z_i-z_{i-1})^2\Delta_i}{(r_\nu\mu_{\varphi,\nu}\Delta_i)^2}
+    \leqslant \frac{\Delta_i}{r_\nu^2}.
+  \end{displaymath}
+  Таким образом, при использовании первой ветки правила (\ref{step3_1}) справедливо неравенство
+  \begin{equation}
+    \label{eq:th1}
+    R_\varphi(i)\leqslant\Delta_i(1 + \frac{1}{r_\nu^2}) - \frac{2(z_i+z_{i-1}-2z^*_\nu)}{r_\nu\mu_{\varphi,\nu}}.
+  \end{equation}
+  Поскольку \(\overline{v}\) является предельной точкой последовательности \(\{v^k\}\) и \(\varphi(y(\overline{v}))\leqslant z^*_{\nu}, \nu=m+1\) или
+  \(z^*_\nu=0, \nu<m+1\) и \(z_{i-1},z_i\to 0\) при \(k\to\infty\):
+  \begin{equation}
+    \label{eq:th2}
+    \Delta_i\to 0, z_i+z_{i-1} - 2 z_\nu^*\to 0.
+  \end{equation}
+  Во втором случае (когда применяется одна из оставшихся ветвей правила (\ref{step3_1})) имеем:
+  \begin{displaymath}
+    R_\varphi(i)=2\Delta_i - 4\frac{z_i-z^*_\nu}{r_\nu\mu_{\varphi,\nu}}.
+  \end{displaymath}
+  Если \(z^*_\nu \ne 0\), то \(z_i-z^*_\nu \geqslant 0\) и
+  \begin{equation}
+    \label{eq:th3}
+    R_\varphi(i)=2\Delta_i - 4\frac{z_i-z^*_\nu}{r_\nu\mu_{\varphi,\nu}} \leqslant 2\Delta_i.
+  \end{equation}
+  Иначе, поскольку \(\overline{v}\) это допустимая точка, \(z_i\to 0\) при \(k\to\infty\).
+
+  Из (\ref{eq:th1}) (\ref{eq:th2}) (\ref{eq:th3}) для любого маленького \(\delta > 0\) существует достаточно большое значение \(k\) такое, что
+  \begin{equation}
+    R_\varphi(i)\leqslant \delta.
+    \label{eq:th6}
+  \end{equation}
+
+  Пусть \(\alpha = \max\{\nu(u):u\in\{u^s\}\}\). Т.к. \(\alpha\) это текущий максимальный индекс
+  в поисковой последовательности \(\{u^s\}\), то в соответствии с правилом (\(\ref{eq:step_4}\)), \(\exists j: w^*_\alpha=w_j\).
+
+  Если \(\nu(w_{j-1})=\nu(w_{j})=\alpha\), то применяется первая ветка правила (\ref{step3_1}) и
+  \begin{equation}
+    \begin{array}{l}
+      R_\psi(j)=\Delta_j + \frac{(w_j-w_{j-1})^2}{r_\alpha^2\mu_{\psi,\alpha}^2\Delta_j}
+        - \frac{2(w_j+w_{j-1}-2w^*_\alpha)}{r_\alpha\mu_{\psi,\alpha}} \geqslant \\
+        \geqslant\Delta_j - \frac{2(w_j+w_{j-1}-2w^*_\alpha)}{r_\alpha\mu_{\psi,\alpha}} =
+        \Delta_j - \frac{2\Delta_j(w_{j-1}-w_j)}{r_\alpha\mu_{\psi,\alpha}\Delta_j} \geqslant\\
+        \geqslant \Delta_j - \frac{2\Delta_j}{r_\alpha} = \Delta_j\left(1-\frac{2}{r_\alpha}\right).
+      \end{array}
+    \label{eq:th4}
+  \end{equation}
+
+  Если \(\nu(w_{j-1})\ne\nu(w_{j})=\alpha\), то \(\nu(w_{j-1})<\alpha\) и применяется третья ветка правила (\ref{step3_1}):
+  \begin{equation}
+    R_\psi(j)=2\Delta_j - 4 \frac{w_j-w^*_{\alpha}}{r_\alpha \mu_{\psi,\alpha}}=2\Delta_j > 0.
+    \label{eq:th5}
+  \end{equation}
+  Принимая во внимание Зачечание~\ref{rem:r1}, (\ref{eq:th4}), (\ref{eq:th5}), можно сделать вывод о том, что
+  существует интервал с положительной характеристикой характеристикой \(R_\psi(j)>0\). В то же время, выполняется (\ref{eq:th6})
+  и неравенство
+  \begin{displaymath}
+    R_\psi(j) > R_\varphi(i)
+  \end{displaymath}
+  будет справедливым при достаточно большом \(k\). Таким образом, следующее испытание будет совершено
+  в интервале, соответствующему второй задаче с целевой функцией \(\psi(y)\), и последовательность \(\{v^s\}\) будет бесконечной.
+
+  Поскольку были рассмотрены две произвольные задачи из \(q\) задач, теорема верна для любой пары задач рассматриваемого множества.
+  По индукции, теорема также верна и для всего множества.
+\qed
+\end{proof}
+
 
 \section{Результаты численных экспериментов}
 
