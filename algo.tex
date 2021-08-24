@@ -1,4 +1,5 @@
 \section{Постановка задачи глобальной оптимизации}
+
 В рамках данной работы будем рассматривать следующую постановку задачи глобальной
 оптимизации: найти глобальный минимум \(N\)-мерной функции \(\varphi(y)\) в гиперинтервале
 \(D=\{y\in \mathbf{R}^N:a_i\leqslant x_i\leqslant{b_i}, 1\leqslant{i}\leqslant{N}\}\).
@@ -32,9 +33,11 @@
 |\varphi(y(x_1))-\varphi(y(x_2))|\leqslant H{|x_1-x_2|}^{\frac{1}{N}},x_1,x_2\in[0;1],
 \end{displaymath}
 где константа Гельдера \(H\) связана с константой Липшица \(L\) соотношением
-\begin{displaymath}
-H=4Ld\sqrt{N},d=\max\{b_i-a_i:1\leqslant i\leqslant N\}.
-\end{displaymath}
+\begin{equation}
+  \label{eq:conv_cond}
+ %H=4Ld\sqrt{N},d=\max\{b_i-a_i:1\leqslant i\leqslant N\}.
+ H\leqslant 2L\sqrt{N+3}
+\end{equation}
 
 Область \(D\) также может быть задана с помощью функциональных ограничений, что
 значительно усложняет задачу.
@@ -46,11 +49,23 @@ H=4Ld\sqrt{N},d=\max\{b_i-a_i:1\leqslant i\leqslant N\}.
 Обозначим \(g_{m+1}(y)=\varphi(y)\). Далее будем предполагать, что все функции \(g_k(y),1\leqslant k \leqslant m+1\)
 удовлетворяют условию Липшица в некотором гиперинтервале, включающем \(D\).
 
-Далее будем интересоваться решением серии из \(q\) задач вида (\ref{eq:constrained_problem}):
+Также будем интересоваться решением серии из \(q\) задач вида (\ref{eq:constrained_problem}):
 \begin{equation}
   \label{eq:many_problems}
   \min\left\{\varphi_1(y), y\in D_1 \right\}, \min\left\{\varphi_2(y), y\in D_2\right\},..., \min\left\{\varphi_q(y), y\in D_q\right\}.
 \end{equation}
+
+При решении серии задач (\ref{eq:many_problems}) возникает проблема оптимального распределения ресурсов метода между ними.
+Будем считать, что метод оптимально распоряжается ресурсами, если при его остановке на некоторой итерации
+решение всех задач получено с одинаковой точностью. Такого совйства можно добиться, потребовав
+от метода равномерной сходимости на всём множестве задач:
+\begin{equation}
+  \label{eq:uni_conv}
+  \exists \varepsilon > 0: \forall s>1, \forall i,j\in\{1,\dots,q\}\;
+    \frac{\Vert \tilde{y_i}(s)^* - y_i*\Vert_\infty}{\Vert \tilde{y_j}(s)^* - y^*_j\Vert_	\infty} \leqslant \varepsilon,
+\end{equation}
+где \(s\) это количество итераций метода оптимизации, \(\tilde{y_i}(s)^*\) это приближение к решению, полученное методом в задаче \(i\)
+из множества (\ref{eq:many_problems}) на итерации \(s\).
 
 \section{Описание метода глобальной оптимизации}
 
