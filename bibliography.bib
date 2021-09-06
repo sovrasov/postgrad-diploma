@@ -848,3 +848,51 @@ isbn = {978-1-4614-9092-0},
 journal = {Journal of Global Optimization},
 doi = {10.1007/s10898-013-0089-3}
 }
+
+@InProceedings{barkalovSovraov2019,
+author="Barkalov, Konstantin
+and Sovrasov, Vladislav
+and Lebedev, Ilya",
+editor="Voevodin, Vladimir
+and Sobolev, Sergey",
+title="Comparison of Dimensionality Reduction Schemes for Parallel Global Optimization Algorithms",
+booktitle="Supercomputing",
+year="2019",
+publisher="Springer International Publishing",
+address="Cham",
+pages="50--62",
+abstract="This work considers a parallel algorithms for solving multi-extremal optimization problems. Algorithms are developed within the framework of the information-statistical approach and implemented in a parallel solver Globalizer. The optimization problem is solved by reducing the multidimensional problem to a set of joint one-dimensional problems that are solved in parallel. Five types of Peano-type space-filling curves are employed to reduce dimension. The results of computational experiments carried out on several hundred test problems are discussed.",
+isbn="978-3-030-05807-4"
+}
+
+@InProceedings{sovrasov2019,
+author="Sovrasov, Vladislav",
+editor="Khachay, Michael
+and Kochetov, Yury
+and Pardalos, Panos",
+title="Comparison of Several Stochastic and Deterministic Derivative-Free Global Optimization Algorithms",
+booktitle="Mathematical Optimization Theory and Operations Research",
+year="2019",
+publisher="Springer International Publishing",
+address="Cham",
+pages="70--81",
+abstract="In this paper popular open-source solvers are compared against Globalizer solver, which is developed at the Lobachevsky State University. The Globalizer is designed to solve problems with black-box objective function satisfying the Lipschitz condition and shows competitive performance with other similar solvers. The comparison is done on several sets of challenging multi-extremal benchmark functions. Also this work considers a method of heuristic hyperparameters control for the Globalizer allowing to reduce amount of initial tuning before optimization. The proposed scheme allows substantially increase convergence speed of the Globalizer by switching between ``local'' and ``global'' search phases in runtime.",
+isbn="978-3-030-22629-9"
+}
+
+@InProceedings{sovrasov2020,
+author="Sovrasov, Vladislav
+and Barkalov, Konstantin",
+editor="Olenev, Nicholas
+and Evtushenko, Yuri
+and Khachay, Michael
+and Malkova, Vlasta",
+title="Parallel Global Optimization Algorithm with Uniform Convergence for Solving a Set of Constrained Global Optimization Problems",
+booktitle="Advances in Optimization and Applications",
+year="2020",
+publisher="Springer International Publishing",
+address="Cham",
+pages="38--52",
+abstract="This paper proposes an extension of global optimization algorithm for solving a set of problems with non-convex constraints. The uniform convergence inherent to the algorithm allows for the optimal distribution of the computational resources, since the number of errors in numerical solutions decreases at approximately equal rate for all problems processed by the algorithm. The algorithm assigns a priority level to each problem and, with every iteration, performs the computations of the objective functions for several problems in parallel. After the algorithm is terminated at any given time, it obtains solutions of similar quality for all the problems of the set. Such sets appear when the global optimization problem has a discrete parameter or, for example, when a multicriteria optimization problem is solved by scalarization techniques. The algorithm employs Peano-type space-filling curves for the reduction of the multidimensional optimization problems to the one-dimensional ones. The efficiency of the implemented algorithm was tested using the sets of artificially generated global optimization problems, as well as a series of problems obtained as a rescult of scalarization of a multicriteria optimization problem. Additional numerical experiments also confirmed the uniform convergence of the proposed method.",
+isbn="978-3-030-65739-0"
+}
