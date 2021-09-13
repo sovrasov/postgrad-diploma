@@ -1,0 +1,42 @@
+\mode<presentation>
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}
+        \useasboundingbox (0, 0) rectangle (\the\paperwidth, \the\paperheight);
+        \fill[color=unndarkerblue] (0, 0) rectangle (\the\paperwidth, 1.8);
+        \fill[color=unnlighterblue] (0, 1.8) rectangle (\the\paperwidth, \the\paperheight-1.8cm);
+        \fill[color=unndarkerblue] (0, \the\paperheight-1.8cm) rectangle (\the\paperwidth, \the\paperheight);
+        \node at (2.5, 9) {\includegraphics[width=0.3\textwidth]{img/unn}};
+        %\node at (7.2, 9) {\includegraphics[width=0.3\textwidth]{img/logo_white.png}};
+        \ifnum\thepage>1\relax
+            \fill[white,opacity=1] (0, 0) rectangle (\the\paperwidth, \the\paperheight);
+        \fi
+    \end{tikzpicture}
+}
+
+\def\beamer@andinst{\quad}
+
+\setbeamertemplate{title page}{
+    \vskip3cm
+    \begin{beamercolorbox}{title page header}
+        \centering
+        \usebeamerfont{title}\inserttitle\par
+    \end{beamercolorbox}
+    \vskip1cm
+    \begin{beamercolorbox}{author}
+        \centering
+        \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \vskip.3cm
+    \begin{beamercolorbox}{insitute}
+        \centering
+        \usebeamerfont{institute}{\color{white}\insertinstitute}
+    \end{beamercolorbox}
+    \vskip1.9cm
+    \begin{beamercolorbox}{date}
+        \centering
+        \usebeamerfont{date}{14 сентября,2021 \\Нижний Новгород}
+    \end{beamercolorbox}
+}
+
+\mode<all>

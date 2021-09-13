@@ -1,0 +1,18 @@
+\mode<presentation>
+
+\setbeamertemplate{frametitle}{
+    \begin{beamercolorbox}[wd=\paperwidth, ht=1.6cm]{frametitle}
+        \begin{tikzpicture}
+            \useasboundingbox (0, 0) rectangle (\the\paperwidth, 1.6cm);
+            \path[fill,unndarkerblue] (0, 0)--(0, 1.2)--(1.1, 1.2)--(0.4, 0)--cycle;
+            \path[fill,unnlighterblue] (0.4, 0)--(1.1, 1.2)--(14, 1.2)--(13.3, 0)--cycle;
+            \node[anchor=west,white,font=\Large,text width=12.1cm] at (1.2, .6) {\insertframetitle};
+            %\path[fill,unnlighterblue] (.2, 0)--(12, 0)--(12, .05)--(0.2, 0.05)--cycle;
+            %\path[fill,unnlighterblue] (.2, 0)--(.2, 2)--(.25, 2)--(0.25, 0)--cycle;
+            %\node[anchor=west,black,font=\Large\bf,text width=10.1cm] at (.5, .9) {\insertframetitle};
+            %\node at (11.5, 0.8) {\includegraphics[width=0.1\textwidth]{img/unn_logo.png}};
+        \end{tikzpicture}
+    \end{beamercolorbox}
+}
+
+\mode<all>
