@@ -15,6 +15,7 @@
 \usepackage{amsfonts}
 \usepackage{subfig}
 \usepackage{tikz}
+\usepackage{amsthm}
 
 \captionsetup[subfigure]{labelformat=empty}
 \captionsetup[figure]{labelformat=empty}
@@ -33,6 +34,7 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator{\sign}{sign}
 \DeclareMathOperator{\re}{Re}
+
 
 \graphicspath{ {../images/}{img/} }
 
@@ -151,13 +153,12 @@
     |\varphi(y(x_1))-\varphi(y(x_2))|\leq H{|x_1-x_2|}^{\frac{1}{N}}, x_1,x_2\in[0,1],
   \end{displaymath}
   \(\varphi(y(x))\) является негладкой функцией с множеством локальных и глобальных экстремумов \textbf{global}, даже если \(\varphi(y)\) унимодальна.
-  Появление дополнительных экстремумов связано с потерей информации о \(N\)-мерной окрестностях точек после преобразования в одномерное пространство.
+  Появление дополнительных экстремумов связано с потерей информации о \(N\)-мерных окрестностях точек после применения отображения в одномерное пространство.
 
   \begin{figure}[ht]
     \begin{center}
-
     \vspace*{-0.5cm}
-    \subfloat{\raisebox{.02\textheight}{\includegraphics[width=.3\textwidth]{parabaloid.png}}}
+    \subfloat{\raisebox{.02\textheight}{\includegraphics[width=.4\textwidth]{parabaloid.png}}}
     \subfloat{\raisebox{.2\textheight}{\includegraphics[width=.05\textwidth]{arrow.jpg}}}
     \subfloat{{\includegraphics[width=.45\textwidth]{map_paraboloid.pdf}}}
   \end{center}
@@ -165,34 +166,41 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Одномерный алгоритм глобального поиска (AGS)}
-  Optimization method generates search sequence \(\{x_k:x_k\in[a,b]\}\) and consists of the following steps:
+  \frametitle{Схема одномерного характеристического алгоритма оптимизации}
+  Метод генерирует последовательность точек \(\{x_k:x_k\in[a,b]\}\), выполняя следующие шаги:
   \begin{enumerate}
     \setlength{\itemindent}{.1in}
-    \item[Step 1.] Sort the search information (one-dimensional points) in increasing order.
-    \item[Step 2.] For each interval \((x_{i-1}, x_i)\) compute quantity \(R(i)\), called characteristic.
-    \item[Step 3.] Choose an interval with the greatest characteristic, \((x_{t-1}, x_{t})\), and
-    make a trial (compute the constraints and objective) at the point \(x^{k+1}\), chosen according with decision rule \(d\):
+    \item[Шаг 1.] Отсортировать поисковую информацию (одномерные точки) в порядке возрастания координаты.
+    \item[Шаг 2.] Для каждого интервала \((x_{i-1}, x_i)\) вычислить величину \(R(i)\), называемую характеристика.
+    \item[Шаг 3.] Выбрать интервал с наибольшей характеристикой, \((x_{t-1}, x_{t})\), и
+    произвести испытание (вычислить ограничения и целевую функцию) в точке \(x^{k+1}\), выбранной в соответствии с решающим правилом \(d\):
     \begin{displaymath}
       x^{k+1}=d(t)\in (x_{t-1}, x_{t})
     \end{displaymath}
-    \item[Step 4.] If \(x_{t}-x_{t-1}<\varepsilon\) stop the method.
+    \item[Шаг 4.] Если верно \(x_{t}-x_{t-1}<\varepsilon\), остановить работу метода.
   \end{enumerate}
-  \textit{\footnotesize	{Детальное описание приведено в Strongin R.G., Sergeyev Ya.D.: Global optimization with non-convex constraints. Sequential and parallel algorithms (2000), Chapter 7}}
+  \textit{\footnotesize	{Описание характеристического метода AGS приведено в Strongin R.G., Sergeyev Ya.D.: Global optimization with non-convex constraints. Sequential and parallel algorithms (2000), Chapter 7}}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Non-univalent evolvent}
-    One can try to recover all preimages of \(y\in\mathbb{R}^N\) and make optimization method aware of their existence\footnote{R.G. Strongin. Numerical Methods in Multiextremal Problems (in Russian), 1978}. This allows reducing the effect of growing amount of local minimas after dimension reduction.
-    According to the theory of Peano-type curves, each \(N\)-d point could have up to \(2^N\) preimages. For large \(N\) such preimages mining would be expensive.
+  \frametitle{Неинъективная развёртка}
+    Одним из подходов к восстановлению потерянной информации является вычисление всех прообразов точки \(y\in\mathbb{R}^N\) 
+    и их учёт в методе оптимизации\footnote{Р.Г. Стронгин. Численные методы в многоэкстремальных задачах, 1978}.
+    Это позволяет снизить влияние эффекта расщепления локальных экстремумов.
+    Каждая \(N\)-мерная точка может иметь до \(2^N\) прообразов, поэтому
+    для большого значения \(N\) вычисление и учёт их всех становится трудоёмким.
       \begin{figure}[ht]
         \includegraphics[width=.25\textwidth]{evolvents/noninjective.pdf}
       \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Shifted and rotated evolvents}
-  To create a fixed amount of preimages one can use a pre-defined set of different evolvents. These evolvents could be shifted or rotated versions of the original one. Set of shifted evolvents\footnote{Strongin, R.G. Algorithms for multi-extremal mathematical programming problems employing the set of joint space-filling curves, Journal of Global Optimization 2(4), 357--378, 1992} is theoretically proven to generate at least one pair of close preimages if their images are close and it performs better than the a set of rotated curves in that sense.
+  \frametitle{Сдвиговые и вращаемые развёртки}
+  Получить фиксированное количество одномерных прообразов можно, например, используя заранее выбранный набор инъективных развёрток.
+  Подобных набор может быть получен путём сдвига или вращения огигинальной развёртки. 
+  Набор сдвиговых развёрток\footnote{Strongin, R.G. Algorithms for multi-extremal mathematical programming problems employing the set of joint space-filling curves, Journal of Global Optimization 2(4), 357--378, 1992}
+  обладает свойством генерировать как минимум одну пару близких прообразов, для двух близких многомерных точек.
+  Для вращаемых развёток подобного утверждения доказано не было, но на практике их использование также приносит ускорение сходимости.
   \begin{figure}[ht]
     \subfloat{\raisebox{.0\textheight}{\includegraphics[width=.35\textwidth]{evolvents/shifted.pdf} }}
     \subfloat{{\includegraphics[width=.35\textwidth]{evolvents/rotated.pdf} }}
@@ -200,45 +208,77 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Smooth evolvent}
-  Smooth functions are more predictable for optimizer, so smooth approximation of the Peano-like \(y(x)\) curve could improve convergence rate \footnote{Goryachih, A. A class of smooth modification of space-filling curves for global optimization problems, NET 2016}.
+  \frametitle{Гладкая развёртка}
+  Поскольку гладкие функции ведут себя более предсказуемо, гладкая аппроксимация кривой Пеано \(y(x)\)
+  может ускорить сходимость процесса оптимизации \footnote{Goryachih, A. A class of smooth modification of space-filling curves for global optimization problems, NET 2016}.
   \begin{figure}[ht]
     \includegraphics[width=0.45\textwidth]{evolvents/smooth.pdf}
   \end{figure}
-
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{Evolvents comparison}
+  \frametitle{Класс тестовых задач}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Генератор GKLS (Gaviano, M. et al, 2003):
+      \begin{displaymath}
+        \begin{matrix}
+          f(x)=
+          \left\{
+          \begin{matrix}
+          C_i(x), x \in S_i, i\in 2,\dots ,m \\
+          \Vert x-T \Vert^2 + t, x\not\in S_2,\dots,S_m
+          \end{matrix} \right.
+        \end{matrix}
+      \end{displaymath}
+
+      \begin{itemize}
+        \item варьируемое число локальных минимумов;
+        \item варьируемый размер области притяжения глобального минимума;
+        \item размерность функции также задаётся.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \centerline{\includegraphics[width=0.9\textwidth]{gkls_color.png}}
+    \end{column}
+  \end{columns}
+  Также был использован один набор из 100 фиксированных многоэкстремальных функций (с 10-30 локальными минимумами). Обозначим его \(F_{GR}\).
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Сравнение развёрток}
   \begin{figure}[ht]
     \hspace*{-0.9cm}
     \subfloat[Minimal \(r\)]{{\includegraphics[width=.55\textwidth]{evolvents/gklsS2d_opt_pt_op.pdf} }}
     \subfloat[\(r=5.0\)]{{\includegraphics[width=.55\textwidth]{evolvents/gklsS2d_same_r_opt_pt_op.pdf} }} \hspace*{4cm}
-    \caption{Operating characteristics on GKLS 2d Simple class}
+    \caption{Операционные характеристики на классе задач GKLS 2d Simple}
   \end{figure}
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{Evolvents comparison}
+  \frametitle{Сравнение развёрток}
   \begin{figure}[ht]
     \hspace*{-0.9cm}
     \subfloat[Minimal \(r\)]{{\includegraphics[width=.55\textwidth]{evolvents/gklsS3d_opt_pt_op.pdf} }}
     \subfloat[\(r=4.5\)]{{\includegraphics[width=.55\textwidth]{evolvents/gklsS3d_same_r_opt_pt_op.pdf} }}
-    \caption{Operating characteristics on GKLS 3d Simple class}
+    \caption{Операционные характеристики на классе задач GKLS 3d Simple}
   \end{figure}
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{Methods}
-  In this work considered the following solvers available in open-source:
+  \frametitle{Сравнение методов глобальной оптимизации}
+  Рассмотрим следующие методы, реализации которых доступны в исходных кодах:
   \begin{itemize}
-    \item[$\square$] \textbf{Deteriminstic}:
+    \item[$\square$] \textbf{Детерминированные}:
     \begin{itemize}
       \item DIRECT, DIRECT$l$ (Gablonsky J. M. et al, 2001);
       \item AGS (Strongin R.G., 1978).
     \end{itemize}
-    \item[$\square$] \textbf{Stochastic}:
+    \item[$\square$] \textbf{Стохастические}:
     \begin{itemize}
       \item Multi Level Single Linkage (Alexander H. G. et al, 1987);
       \item StoGO (Madsen, Kaj at al, 1998);
@@ -249,23 +289,23 @@
   \end{itemize}
 \end{frame}
 
+
 \begin{frame}
-  \frametitle{Hyperparameters tuning in AGS}
-  In order to resolve the problem of choosing $r$ to some extent,
-  let us use the following scheme:
+  \frametitle{Настройка параметров в методе AGS}
+  С целью снизить зависимость метода от множителя оценки константы Гёльдера $r$,
+  рассмотрим следующую схему:
   \begin{itemize}
-    \item execute $q$ iterations of AGS with $r=r_{max}$;
-    \item execute $q$ iterations of AGS with $r=r_{min}$;
-    \item repeat the above steps either until convergence or until the allowed number of iterations are
-  exhausted.
+    \item выполнить $q$ итераций AGS с $r=r_{max}$;
+    \item выполнить $q$ итераций AGS с $r=r_{min}$;
+    \item выполнять указанные шаги до наступления сходимости или до исчерпания отведённого на вычисления времени.
 \end{itemize}
-  Now we have 3 parameters instead of one, but the method is not so sensitive to them.
-  Let $q=50\cdot\log_2(N-1)\cdot N^2$, $r_{min}=3,\:r_{max}=2\cdot r_{min}$ in all the future experiments.
+  В результате появляются три параметра вместо одного, но метод не столь чувствителен к ним.
+  Примем $q=50\cdot\log_2(N-1)\cdot N^2$, $r_{min}=3,\:r_{max}=2\cdot r_{min}$.
 \end{frame}
 
 
 \begin{frame}
-  \frametitle{Results of different methods}
+  \frametitle{Результаты сравнения методов}
   \begin{figure}[ht]
     \centering
     \subfloat[4d Simple]{{\includegraphics[width=.5\textwidth]{comparison/gklss4d.pdf}}\label{fig:s4d}}
@@ -274,7 +314,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Results of different methods}
+  \frametitle{Результаты сравнения методов}
   \begin{figure}[ht]
     \centering
     \subfloat[5d Simple]{{\includegraphics[width=.5\textwidth]{comparison/gklss5d.pdf}}\label{fig:s4d}}
@@ -284,52 +324,63 @@
 
 
 \begin{frame}
-  \frametitle{Algorithm for solving a set of problems}
-  The method relies on the previously introduced AGS and consists of the following steps:
+  \frametitle{Метод, решающий множество задач}
+  Метод опирается на ранее упомянутый алгоритм AGS (BarkalovK., StronginR., 2018):
   \begin{itemize}
-    \item Create \(q\) copies of AGS.
-    \item Run \(q\) synchronously working copies of AGS, but instead of performing Step 3, stop all
-    the methods and select an interval with the highest characteristic among intervals from all the methods.
-    \item If the interval with the highest characteristic belongs to problem \(i\), execute Step 3 in the \(i^{th}\) copy of AGS.
-    Other copies skip Step 3.
-    \item To implement parallel processing, method picks \(p\) intervals at the previous two steps
-    and performs \(p\) trials simultaneously.
+    \item Создать \(q\) копий AGS, каждая из которых получает по одной задаче.
+    \item Запустить \(q\) синхронно работающих копий AGS, но вместо выполнения Шага 3,
+    остановить все копии и выбрать интервал с наибольшей характеристикой среди интервалов во всех задачах.
+    \item Если выбранный на предыдущем шаге интервал принадлежит задаче \(i\), выполнить Шаг 3 в \(i^{th}\) копии AGS.
+    Остальные копии пропускают Шаг 3.
+    \item Чтобы обеспечить параллельность вычислений, метод выбирает \(p\) интервалов на предыдущих
+    двух шагах и выполняет \(p\) испытаний параллельно.
   \end{itemize}
-  The described method relies to \textbf{comparability of characteristics in different problems}.
+  Описанных алгоритм предполагает \textbf{сравнимость характеристик во всех задачах}.
 \end{frame}
 
 \begin{frame}
-  \frametitle{Index method of handling inequality constraints}
-  Instead of the original problems with functional constraints the index scheme considers the following unconstrained problem:
+  \frametitle{Индексная схема учёта ограничений}
+  Вместо исходной задачи с функциональными ограничениями, индексная схема рассматривает следующую задачу без ограничений:
   \begin{displaymath}
     \begin{array}{lr}
       \psi (x^{*})=\min_{x\in [0;1]}\psi (x), \\
       \psi (x)={\begin{cases}g_{\nu }(x)/H_{\nu }&\nu <M\\(g_{M}(x)-g_{M}^{*})/H_{M}&\nu =M\end{cases}},
     \end{array}
   \end{displaymath}
-  where if \(\nu=m+1\;,g_\nu(x)=\varphi(x)\).
+  где при \(\nu=m+1\;,g_\nu(x)=\varphi(x)\).
 
-  Characteristics are defined as follows:
+  Характеристики алгоритма глобального поиска при использовании индексной схемы (IAGS) имеют следующий вид:
   \begin{displaymath}
     R(i)={\begin{cases}\Delta _{i}+{\frac {(z_{i}-z_{i-1})^{2}}{(r_{\nu }\mu _{\nu })^{2}\Delta _{i}}}-2{\frac {z_{i}+z_{i-1}-2z_{\nu }^{*}}{r_{\nu }\mu _{\nu }}}&\nu =\nu (x_{i})=\nu (x_{i-1})\\2\Delta _{i}-4{\frac {z_{i-1}-z_{\nu }^{*}}{r_{\nu }\mu _{\nu }}}&\nu =\nu (x_{i-1})>\nu (x_{i})\\2\Delta _{i}-4{\frac {z_{i}-z_{\nu }^{*}}{r_{\nu }\mu _{\nu }}}&\nu =\nu (x_{i})>\nu (x_{i-1})\end{cases}}
   \end{displaymath}
-  where \(z_i=\psi(x_i)\).
+  где \(z_i=\psi(x_i)\).
+
+  \textit{\footnotesize	{Подробное описание индексной схемы приведено в Strongin R.G., Sergeyev Ya.D.: Global optimization with non-convex constraints. Sequential and parallel algorithms (2000), Chapter 7}}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Univariate Algorithm of Global Search}
-  Sufficient convergence conditions:
+  \frametitle{Сходимость}
+  \textbf{Достаточные условия сходимости AGS (Д. Л. Маркин, Р. Г. Стронгин, 1987)}:
   \begin{enumerate}
-    \item \(G\ne\emptyset\), the source problem has a solution.
-    \item Functions \(g_j(y)\leqslant 0, 1\leqslant j\leqslant m + 1\), are Lipschitzian with
-respective constants \(L_i\) over the domain \(D\) (here \(g_{m+1}(y)=\varphi(y)\)).
-    \item During the optimization process estimations of \(L_i\) becomes large enough.
+    \item \(G\ne\emptyset\), исходная задача имеет решение.
+    \item Функции \(g_j(y)\leqslant 0, 1\leqslant j\leqslant m + 1\), липшицевы с
+      константами \(L_i\) в гиперинтервале \(D\) (здесь \(g_{m+1}(y)=\varphi(y)\)).
+    \item Начиная с некоторого момента значения оценок констант Гёльдара \(Н_i\) становятся достаточно большими.
   \end{enumerate}
+
+  \textbf{Достаточные условия сходимости MIAGS}: пусть указанные выше условия выполнены для
+  каждой задачи \(i,\:1\leqslant i\leqslant q\) из (\ref{eq:many_problems}),
+  т.е. каждая из задач может быть решена AGS.
+    Тогда в процессе решения \(q\) задач MIAGS сгенерирует
+    \(q\) бесконечных последовательностей \(\{y^k_i\},\:1\leqslant i\leqslant q\), таких, что
+    \begin{displaymath}
+      \varphi_i(\overline{y_i})=\inf\{ \varphi(y^k_i): g^i_j(y^k_i)\leqslant 0,1\leqslant j\leqslant m_i, k=1,2,\dots\}=\varphi_i(y^*_i).
+    \end{displaymath}
 \end{frame}
 
 \begin{frame}
-  \frametitle{An example of solving a multi-objective problem}
-  Consider the following problem:
+  \frametitle{Пример решения многокритериальной задачи}
+  Рассмотрим следующую задачу:
   \begin{displaymath}
     \begin{array}{l}
         Minimize \left \{
@@ -349,17 +400,17 @@ respective constants \(L_i\) over the domain \(D\) (here \(g_{m+1}(y)=\varphi(y)
         \right .
     \end{array}
   \end{displaymath}
-  After scalarization the problem has the following form:
+  После скаляризации задача примет следующую форму:
   \begin{displaymath}
     \varphi(y^*(\lambda_1,\lambda_2))=\min_{y\in D}\max\{\lambda_1 f_1(y), \lambda_2 f_2(y)\};\lambda_1,\lambda_2\in[0,1],\: \lambda_1+\lambda_2=1
 \end{displaymath}
-To build the Pareto set numerically, consider
-100 pairs of the variables \((\lambda_1,\lambda_2)\) such that
+Для численного постороения Парето фронта рассмотрим
+100 пар \((\lambda_1,\lambda_2)\) таких, что
 \(\lambda_1^i=i h,\: \lambda_2^i=1-\lambda_1^i,\: h=10^{-2},i=\overline{1, 100}\).
 \end{frame}
 
 \begin{frame}
-  \frametitle{An example of solving a multi-objective problem}
+  \frametitle{Пример решения многокритериальной задачи}
   \vspace*{-1.0cm}
   \begin{displaymath}
     \begin{array}{cr}\\
@@ -375,23 +426,23 @@ To build the Pareto set numerically, consider
       \label{fig:mco_pareto_1} {\includegraphics[width=.5\textwidth]{single_mco.pdf}}}
       \subfloat[MIAGS, \(SP_{multi}=0.749\)]{
       \label{fig:mco_pareto_2} {\includegraphics[width=.5\textwidth]{multi_mco.pdf}}}
-      \caption{Numerical estimations of the Pareto set, obtained after 2500 trails}
+      \caption{Численные оценки множества Парето, полученные после 2500 испытаний}
       \label{fig:mco_pareto}
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Generated test problems}
+  \frametitle{Решение тестовых задач с ограничениями}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-      Sets of test problems are obtained by applying the GCGen system to
-      functions produced by generators of unconstrained test problems.
-      The main features of the generated sets:
+      Наборы задач с ограничениями были получены путём применения системы
+      GCGen к функциям, порождёнными генераторами задач без ограничений.
+      Основные свойства полученных наборов задач:
       \begin{itemize}
         \item \(q\)=100;
-        \item Dimension 2, 3 or 4;
-        \item Base fuctions GKLS or \(F_{GR}\), or a combination of them;
-        \item Number of nonlinear constraints: 2.
+        \item Размерность 2, 3 или 4;
+        \item Базовые функции GKLS или \(F_{GR}\), или их комбинация;
+        \item Количество нелинейных ограничений: 2.
       \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -402,18 +453,21 @@ To build the Pareto set numerically, consider
 \end{frame}
 
 \begin{frame}
-  \frametitle{Hardware and software environment}
+  \frametitle{Аппаратное и программное окружение}
   \begin{center}
-    The parallel method was implemented on C++ language with the use of OpenMP
-    technology for organizing parallelism on shared memory.
+    Параллельный метод реализован на языке C++ с использованием технологии OpenMP
+    для параллельных вычислений на общей памяти.
 
-    All the numerical experiments were carried out on a computer with the following
-    configuration: Intel Core i7-7800X (6 cores) CPU, 64GB RAM, Unubtu 16.04 ОS, GCC 5.5 compiler.
+    Все численные эксперименты были выполнены на машине со следующей конфигурацией:
+    Intel Core i7-7800X (6 cores) CPU, 64GB RAM, Unubtu 16.04 ОS, GCC 5.5 compiler.
+    
+    В целевые функции и ограничения во всех задачах вносились задержки так, чтобы
+    вычисление каждой функции занимало 1 мс.
   \end{center}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Result of solving sets of synthetic problems}
+  \frametitle{Результаты решения тестовых задач}
   \begin{figure}[ht]
     \vspace*{-0.5cm}
       \centering
@@ -421,19 +475,19 @@ To build the Pareto set numerically, consider
       \label{fig:max_dev} {\includegraphics[width=.5\textwidth]{mixed_2d_max.pdf}}}
       \subfloat[\(D_{avg}\)]{
       \label{fig:avg_dev} {\includegraphics[width=.5\textwidth]{mixed_2d_avg.pdf}}}
-      \caption{Dynamic of the average and maximal errors, during solving of problems
-      generated on different types of base functions: GKLS и \(F_{GR}\)}
+      \caption{Изменение средней и максимальной ошибки, при решении смешанного класса задач, 
+      полученного с помощью двух генераторов: GKLS и \(F_{GR}\)}
       \label{fig:devs_mixed}
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Result of solving sets of synthetic problems}
+  \frametitle{Результаты решения тестовых задач}
   \begin{table}
     \centering
     \begin{tabular}{c|c|c|c|c|c}
       %\cline{1-8}\noalign{\smallskip}
-      Problems class & \textit{p} & Number of iterations & Time, s & \(S_i\) & \(S_t\)   \\
+      Класс задач & \textit{p} & Количество итераций & Время, с & \(S_i\) & \(S_t\)   \\
       %s\noalign{\smallskip} \cline{4-5} \cline{7-8}  \noalign{\smallskip}
       \hline
       GKLS \& \(F_{GR}\)-based \
@@ -452,12 +506,12 @@ To build the Pareto set numerically, consider
   \end{table}
 \end{frame}
 \begin{frame}
-  \frametitle{Result of solving sets of synthetic problems}
+  \frametitle{Результаты решения тестовых задач}
   \begin{table}
     \centering
     \begin{tabular}{c|c|c|c|c|c}
       %\cline{1-8}\noalign{\smallskip}
-      Problems class & \textit{p} & Number of iterations & Time, s & \(S_i\) & \(S_t\)   \\
+      Класс задач & \textit{p} & Количество итераций & Время, с & \(S_i\) & \(S_t\)   \\
       %s\noalign{\smallskip} \cline{4-5} \cline{7-8}  \noalign{\smallskip}
       \hline
       GKLS-based 3d \
